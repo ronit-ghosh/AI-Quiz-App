@@ -1,0 +1,14 @@
+{
+  "name": "@repo/constants",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "exports": {
+    "./messages": "./src/messages.ts",
+    "./status-codes": "./src/status-codes.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

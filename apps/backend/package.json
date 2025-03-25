@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "dev": "bun --watch src/server.ts"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "nodemon": "^3.1.9"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@repo/constants": "*",
+    "@repo/validations": "*",
+    "@google/generative-ai": "^0.24.0",
+    "@repo/db": "*",
+    "@types/multer": "^1.4.12",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2",
+    "pdf-to-img": "^4.4.0"
+  }
+}
