@@ -46,6 +46,7 @@ export const createQuizFromText = async (data: CreateQuizFromTextTypes) => {
                 categoryId: categoryId.id,
                 correct: quiz.correct,
                 question: quiz.question,
+                explanation: quiz.explanation,
                 options: {
                     create: quiz.options.map((opt) => ({
                         option: opt.option,

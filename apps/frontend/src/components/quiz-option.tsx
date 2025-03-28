@@ -4,27 +4,72 @@ import type React from "react"
 
 import { useState, type ReactNode } from "react"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Upload } from "lucide-react"
+import { toast } from "sonner"
 
 interface QuizOptionProps {
   icon: ReactNode
   title: string
   description: string
   isTextQuiz?: boolean
+  handleGeneration?: (categoryName: string, categoryDesc: string, file?: File, prompt?: string) => void
+  loading: boolean
 }
 
-export default function QuizOption({ icon, title, description, isTextQuiz }: QuizOptionProps) {
+export default function QuizOption({ icon, title, description, isTextQuiz, handleGeneration, loading }: QuizOptionProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [fileName, setFileName] = useState("")
+  const [categoryName, setCategoryName] = useState<string>("")
+  const [categoryDesc, setCategoryDesc] = useState<string>("")
+  const [prompt, setPrompt] = useState<string>("")
+  const [file, setFile] = useState<File>()
+  const [uploaded, setUploaded] = useState(false)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFileName(e.target.files[0]!.name)
+  const onSubmit = () => {
+    handleGeneration!(
+      categoryName,
+      categoryDesc,
+      file,
+      prompt
+    )
+  }
+
+  function handleFileChange() {
+    const input = document.createElement("input")
+    input.type = "file"
+
+    if (title.includes("PDF")) {
+      input.accept = "application/pdf"
+
+      input.onchange = async () => {
+        if (!input.files) {
+          toast("No file found!")
+          return
+        }
+
+        const file = input.files[0]
+        setFile(file)
+        setUploaded(true)
+      }
+    } else {
+      input.accept = "image/png"
+
+      input.onchange = async () => {
+        if (!input.files) {
+          toast("No file found!")
+          return
+        }
+
+        const file = input.files[0]
+        setFile(file)
+        setUploaded(true)
+      }
     }
+
+    input.click()
   }
 
   return (
@@ -43,18 +88,23 @@ export default function QuizOption({ icon, title, description, isTextQuiz }: Qui
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-md">
+          <DialogDescription />
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">Create {title}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-6 py-4">
             <div className="grid gap-2">
               <Label htmlFor="category-name">Category Name</Label>
-              <Input id="category-name" placeholder="Enter category name" />
+              <Input
+                onChange={e => setCategoryName(e.target.value)}
+                id="category-name"
+                placeholder="Enter category name" />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="category-description">Category Description</Label>
               <Textarea
+                onChange={e => setCategoryDesc(e.target.value)}
                 id="category-description"
                 placeholder="Enter a brief description of this quiz category"
                 className="resize-none h-16"
@@ -70,7 +120,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz }: Qui
                       <Upload className="h-6 w-6 text-blue-600" />
                     </div>
                     <p className="text-sm text-gray-600 text-center">
-                      {fileName ? fileName : "Drag and drop your file here, or click to browse"}
+                      {"Drag and drop your file here, or click to browse"}
                     </p>
                     <p className="text-xs text-gray-500">
                       {title.includes("PDF")
@@ -79,27 +129,31 @@ export default function QuizOption({ icon, title, description, isTextQuiz }: Qui
                           ? "Supports JPG, PNG files (max 10MB)"
                           : "Supports TXT, PDF files (max 10MB)"}
                     </p>
-                    <Input
-                      id={`file-upload-${title.replace(/\s+/g, "-").toLowerCase()}`}
-                      type="file"
-                      className="hidden"
-                      accept={title.includes("PDF") ? ".pdf" : title.includes("Image") ? ".jpg,.jpeg,.png" : ".txt,.pdf"}
-                      onChange={handleFileChange}
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() =>
-                        document.getElementById(`file-upload-${title.replace(/\s+/g, "-").toLowerCase()}`)?.click()
-                      }
-                    >
-                      Browse Files
-                    </Button>
+                    {
+                      !uploaded ?
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={handleFileChange}
+                        >
+                          Browse Files
+                        </Button> :
+                        <Button
+                          disabled
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                        >
+                          Uploaded
+                        </Button>
+                    }
                   </div> :
                   <Textarea
-                  className="h-40 resize-none"
-                  placeholder="Enter a brief prompt..."
+                    onChange={e => setPrompt(e.target.value)}
+                    className="h-40 resize-none"
+                    placeholder="Enter a brief prompt..."
                   />
               }
             </div>
@@ -108,7 +162,11 @@ export default function QuizOption({ icon, title, description, isTextQuiz }: Qui
               <Button variant="outline" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
-              <Button>Create Quiz</Button>
+              <Button
+                disabled={loading || !file || !categoryDesc || !categoryName}
+                onClick={onSubmit}>
+                {loading ? "Generating..." : "Create Quiz"}
+              </Button>
             </div>
           </div>
         </DialogContent>

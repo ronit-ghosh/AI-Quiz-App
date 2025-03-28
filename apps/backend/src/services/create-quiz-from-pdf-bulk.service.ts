@@ -16,13 +16,13 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
     let questions: string[] = []
 
     const images = await pdf(mediaBuffer, { scale: 3 });
-    
+
     for await (const image of images) {
 
         const fileManager = new GoogleAIFileManager(GEMINI_API_KEY);
 
         const uploadResult = await fileManager.uploadFile(
-            "https://pub-07b216c33cb94d9db3ada1de2e98bf02.r2.dev/Screenshot%202025-03-23%20015059.png",
+            image,
             {
                 mimeType: "image/jpeg",
                 displayName: categoryName,
@@ -82,7 +82,7 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
     }
 
     const quizes: Quizes[] = questions.map(q => JSON.parse(q.replace(/,\s*([\]}])/g, '$1')));
-
+    
     for (const quiz of quizes) {
         quiz.questions.forEach(async (q) => {
             await prisma.questions.create({
@@ -90,6 +90,7 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
                     categoryId: categoryId.id,
                     correct: q.correct,
                     question: q.question,
+                    explanation: q.explanation,
                     options: {
                         create: q.options.map((opt: any) => ({
                             optionId: opt.optionId.toUpperCase(),

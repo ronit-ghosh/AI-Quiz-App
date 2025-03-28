@@ -10,11 +10,10 @@ import path from "path"
 
 export const createQuizFromImage = async (data: any) => {
     const { categoryName, categoryDesc, mediaBuffer } = data
-    console.log("Services Buffer: ", mediaBuffer)
+    
     const tempFilePath = path.join(__dirname, `temp-${Date.now()}.png`) as string;
 
     const fileCreated = fs.writeFileSync(tempFilePath, Buffer.from(mediaBuffer));
-    console.log("File: ", fileCreated)
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
@@ -42,8 +41,6 @@ export const createQuizFromImage = async (data: any) => {
         throw new Error("Image processing failed.");
     }
 
-    console.log(uploadResult)
-
     const result = await model.generateContent([
         SystemPrompt,
         {
@@ -59,9 +56,6 @@ export const createQuizFromImage = async (data: any) => {
     const actualQuestions = result.response.candidates[0]?.content.parts[0]?.text
     const parsedQuestions = JSON.parse(actualQuestions?.replace(/^```json\s*|\s*```$/g, '')!)
     const quizes: Questions[] = parsedQuestions?.questions
-    console.log("Quizes: ", quizes)
-    console.log("Parsed Questions: ", parsedQuestions)
-    console.log("Actual Questions: ", actualQuestions)
 
     let categoryId = await prisma.categories.findUnique({
         where: {
@@ -90,6 +84,7 @@ export const createQuizFromImage = async (data: any) => {
                 categoryId: categoryId.id,
                 correct: quiz.correct,
                 question: quiz.question,
+                explanation: quiz.explanation,
                 options: {
                     create: quiz.options.map((opt) => ({
                         option: opt.option,

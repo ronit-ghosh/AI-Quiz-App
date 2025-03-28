@@ -6,6 +6,7 @@ export interface Questions {
     question: string
     options: Options[]
     correct: QuestionOption
+    explanation: string
 }
 
 interface Options {

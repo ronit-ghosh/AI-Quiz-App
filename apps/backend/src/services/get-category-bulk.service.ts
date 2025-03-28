@@ -13,6 +13,9 @@ export const getCategoriesBulk = async () => {
                     _count: true
                 }
             }
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 

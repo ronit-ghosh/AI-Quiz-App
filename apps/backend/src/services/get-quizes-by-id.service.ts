@@ -7,12 +7,12 @@ export const getQuizesById = async (id: string) => {
         select: {
             name: true,
             desc: true,
-            _count: true,
             questions: {
                 select: {
                     id: true,
                     question: true,
                     correct: true,
+                    explanation: true,
                     options: {
                         select: {
                             optionId: true,

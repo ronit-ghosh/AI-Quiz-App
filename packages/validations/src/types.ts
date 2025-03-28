@@ -18,3 +18,12 @@ export const createQuizFromMediaValidation = z.object({
     categoryDesc: z.string({ message: Messages.ERROR.INVALID_STRING }),
     mediaBuffer: mediaBufferSchema
 })
+
+export const createStatsValidation = z.object({
+    totalQuestions: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+    answeredQuestions: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+    correctAnswers: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+    incorrectAnswers: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+    score: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+    categoryId: z.string({ message: Messages.ERROR.INVALID_STRING })
+})

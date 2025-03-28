@@ -3,20 +3,37 @@
 import { CheckCircle, XCircle, Clock, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { BACKEND_URL } from "@/lib/env"
+import { toast } from "sonner"
+import { ParamValue } from "next/dist/server/request/params"
 
-interface QuizResultsProps {
-  results: {
+interface StatsDataTypes {
+  stats: {
+    score: number
     totalQuestions: number
     answeredQuestions: number
     correctAnswers: number
     incorrectAnswers: number
-    score: number
   }
-  quizTitle: string
+  categoryName: string
 }
 
-export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
+export default function QuizResults({ id }: { id: ParamValue }) {
   const router = useRouter()
+  const [data, setData] = useState<StatsDataTypes>()
+
+  useEffect(() => {
+    (async function getStats() {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/stats/get/${id}`)
+        setData(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    })()
+  }, [])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600"
@@ -33,23 +50,25 @@ export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
     return "You might need to review this topic more thoroughly."
   }
 
+  if (!data) return
+  console.log(data)
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <div className="bg-card rounded-lg shadow-sm overflow-hidden">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-2">Quiz Results</h1>
-          <p className="text-primary/60 mb-6">{quizTitle}</p>
+          <p className="text-primary/60 mb-6">{data.categoryName}</p>
 
           <div className="flex justify-center mb-8">
             <div className="w-48 h-48 relative flex items-center justify-center rounded-full bg-secondary">
               <div className="text-center">
-                <div className={`text-5xl font-bold ${getScoreColor(results.score)}`}>{results.score}%</div>
+                <div className={`text-5xl font-bold ${getScoreColor(data.stats.score)}`}>{data.stats.score}%</div>
                 <div className="text-primary mt-1">Your Score</div>
               </div>
             </div>
           </div>
 
-          <p className="text-center text-lg mb-8">{getScoreMessage(results.score)}</p>
+          <p className="text-center text-lg mb-8">{getScoreMessage(data.stats.score)}</p>
 
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="bg-secondary p-4 rounded-lg flex items-center">
@@ -58,7 +77,7 @@ export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
               </div>
               <div>
                 <div className="text-sm text-primary">Total Questions</div>
-                <div className="text-xl font-bold">{results.totalQuestions}</div>
+                <div className="text-xl font-bold">{data.stats.totalQuestions}</div>
               </div>
             </div>
 
@@ -68,7 +87,7 @@ export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
               </div>
               <div>
                 <div className="text-sm text-primary">Answered</div>
-                <div className="text-xl font-bold">{results.answeredQuestions}</div>
+                <div className="text-xl font-bold">{data.stats.answeredQuestions}</div>
               </div>
             </div>
 
@@ -78,7 +97,7 @@ export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
               </div>
               <div>
                 <div className="text-sm text-primary">Correct</div>
-                <div className="text-xl font-bold">{results.correctAnswers}</div>
+                <div className="text-xl font-bold">{data.stats.correctAnswers}</div>
               </div>
             </div>
 
@@ -88,16 +107,16 @@ export default function QuizResults({ results, quizTitle }: QuizResultsProps) {
               </div>
               <div>
                 <div className="text-sm text-primary">Incorrect</div>
-                <div className="text-xl font-bold">{results.incorrectAnswers}</div>
+                <div className="text-xl font-bold">{data.stats.incorrectAnswers}</div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-40 mx-auto">
             <Button variant="outline" className="flex-1" onClick={() => router.push("/")}>
               Back to Home
             </Button>
-            <Button className="flex-1">Review Answers</Button>
+            {/* <Button className="flex-1">Review Answers</Button> */}
           </div>
         </div>
       </div>

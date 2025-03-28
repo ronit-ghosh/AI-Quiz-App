@@ -1,7 +1,9 @@
-// "use client"
+"use client"
+
 import Link from 'next/link'
 import { ThemeToggle } from '../ThemeToggle'
 import { Button } from '../ui/button'
+import { toast } from 'sonner'
 
 export default function Navbar() {
     return (
@@ -11,8 +13,8 @@ export default function Navbar() {
                     <h1 className="sm:text-3xl text-2xl font-bold text-blue-700 mb-2">Quiz AI</h1>
                 </Link>
                 <div className="flex items-center gap-2">
-                    <Button>Signup</Button>
-                    <Button>Signin</Button>
+                    {/* <Button onClick={() => toast("yo")}>Signup</Button>
+                    <Button>Signin</Button> */}
                     <ThemeToggle />
                 </div>
             </div>
