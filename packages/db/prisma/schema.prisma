@@ -20,7 +20,7 @@ model Questions {
   id          Int        @id @default(autoincrement())
   question    String
   categoryId  String
-  category    Categories @relation(fields: [categoryId], references: [id])
+  category    Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   options     Options[]
   correct     Option
   explanation String?
@@ -31,17 +31,31 @@ model Options {
   optionId   Option
   option     String
   questionId Int
-  question   Questions @relation(fields: [questionId], references: [id])
+  question   Questions @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model Stats {
-  id                String @id @default(cuid())
+  id                String    @id @default(cuid())
   totalQuestions    Int
   answeredQuestions Int
   correctAnswers    Int
   incorrectAnswers  Int
   score             Int
-  categoryId        String? 
+  categoryId        String?
+  answers           Answers[]
+  createdAt         DateTime?  @default(now())
+  updatedAt         DateTime?  @updatedAt
+}
+
+model Answers {
+  id         String   @id @default(cuid())
+  questionId Int
+  optionId   String
+  categoryId String
+  statsId    String
+  stats      Stats    @relation(fields: [statsId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum Option {

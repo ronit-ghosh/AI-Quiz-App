@@ -1,11 +1,10 @@
 {
-  "name": "@repo/validations",
+  "name": "@repo/store",
   "module": "index.ts",
   "type": "module",
   "private": true,
   "exports": {
-    "./types": "./src/types.ts",
-    "./inferred-types": "./src/inferred-types.ts"
+    ".": "./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -15,7 +14,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "zod": "^3.24.2",
-    "@repo/constants": "*"
+    "axios": "^1.8.4",
+    "zustand": "^5.0.3"
   }
 }

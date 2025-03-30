@@ -15,7 +15,8 @@ export const createStatsController = async (req: Request, res: Response) => {
             correctAnswers,
             incorrectAnswers,
             score,
-            categoryId
+            categoryId,
+            answers
         } = req.body
 
         const parsedValues = createStatsValidation.safeParse({
@@ -24,7 +25,8 @@ export const createStatsController = async (req: Request, res: Response) => {
             correctAnswers,
             incorrectAnswers,
             score,
-            categoryId
+            categoryId,
+            answers
         })
 
         if (!parsedValues.success) {

@@ -25,5 +25,11 @@ export const createStatsValidation = z.object({
     correctAnswers: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
     incorrectAnswers: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
     score: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
-    categoryId: z.string({ message: Messages.ERROR.INVALID_STRING })
+    categoryId: z.string({ message: Messages.ERROR.INVALID_STRING }),
+    answers: z.array(
+        z.object({
+            questionId: z.number({ message: Messages.ERROR.INVALID_NUMBER }),
+            optionId: z.string({ message: Messages.ERROR.INVALID_STRING })
+        })
+    )
 })

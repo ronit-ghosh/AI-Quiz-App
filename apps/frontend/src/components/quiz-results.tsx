@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { BACKEND_URL } from "@/lib/env"
-import { toast } from "sonner"
 import { ParamValue } from "next/dist/server/request/params"
 
 interface StatsDataTypes {
@@ -116,7 +115,7 @@ export default function QuizResults({ id }: { id: ParamValue }) {
             <Button variant="outline" className="flex-1" onClick={() => router.push("/")}>
               Back to Home
             </Button>
-            {/* <Button className="flex-1">Review Answers</Button> */}
+            <Button className="flex-1">Review Answers</Button>
           </div>
         </div>
       </div>

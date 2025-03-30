@@ -10,7 +10,14 @@ export const createStats = async (data: CreateStatsTypes) => {
             incorrectAnswers: data.incorrectAnswers,
             score: data.score,
             totalQuestions: data.totalQuestions,
-            categoryId: data.categoryId
+            categoryId: data.categoryId,
+            answers: {
+                create: data.answers.map((ans) => ({
+                    categoryId: data.categoryId,
+                    optionId: ans.optionId,
+                    questionId: ans.questionId,
+                }))
+            }
         }
     })
 
