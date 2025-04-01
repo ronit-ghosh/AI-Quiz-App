@@ -10,12 +10,15 @@ export default function RecentQuiz() {
 
     return (
         <>
-            <div className="flex gap-2 items-center mb-6">
-                <h2 className="text-2xl font-bold">Recent Quizzes</h2>
-                <RotateCcw 
-                size={18} 
-                onClick={reloadData} 
-                className='cursor-pointer active:-rotate-45 transition-transform'/>
+            <div className="mb-6 flex">
+                <div className="mx-auto flex items-center gap-2">
+
+                    <h2 className="text-2xl font-bold">Recent Quizzes</h2>
+                    <RotateCcw
+                        size={18}
+                        onClick={reloadData}
+                        className='cursor-pointer active:-rotate-45 transition-transform mt-1.5' />
+                </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mb-12">
                 {

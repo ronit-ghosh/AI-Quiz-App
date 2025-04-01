@@ -10,7 +10,7 @@ interface StatStoreTypes {
         incorrectAnswers: number,
         score?: number
     }
-    
+
     createStats: (
         answeredQuestions: number,
         correctAnswers: number,
@@ -46,6 +46,7 @@ const StatStore: StateCreator<StatStoreTypes> = () => ({
 
         return { answeredQuestions, correctAnswers, incorrectAnswers, score };
     },
+
     createStats: async (answeredQuestions, correctAnswers, incorrectAnswers, score, categoryId) => {
         const { quizData, userAnswers } = useQuizStore.getState();
         try {
@@ -60,7 +61,7 @@ const StatStore: StateCreator<StatStoreTypes> = () => ({
             })
             return response.data.statsId
         } catch (error) {
-
+            console.error(error)
         }
     }
 })

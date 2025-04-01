@@ -111,11 +111,16 @@ export default function QuizResults({ id }: { id: ParamValue }) {
             </div>
           </div>
 
-          <div className="flex gap-4 w-40 mx-auto">
-            <Button variant="outline" className="flex-1" onClick={() => router.push("/")}>
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => router.push("/")}>
               Back to Home
             </Button>
-            <Button className="flex-1">Review Answers</Button>
+            <Button className="flex-1">
+              Review Answers
+            </Button>
           </div>
         </div>
       </div>

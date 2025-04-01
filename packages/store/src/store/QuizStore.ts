@@ -2,6 +2,7 @@ import { create, type StateCreator } from "zustand"
 import type { QuizData } from "../types"
 import axios from "axios"
 import { BACKEND_URL } from "../env"
+import { useStatStore } from "./StatStore"
 
 interface QuizStoreTypes {
     quizData: QuizData | null
@@ -99,7 +100,9 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set) => ({
     handleReset: () => set(() => {
         set({
             userAnswers: [],
-            currentQuestionIndex: 0
+            currentQuestionIndex: 0,
+            selectedAnswer: null,
+            showExplanation: false
         })
         return {}
     })

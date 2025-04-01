@@ -16,7 +16,8 @@ export const getCategoriesBulk = async () => {
         },
         orderBy: {
             createdAt: 'desc'
-        }
+        },
+        take: 6
     })
 
     if (!response) throw new Error(Messages.ERROR.CATEGORY_NOT_FOUND)

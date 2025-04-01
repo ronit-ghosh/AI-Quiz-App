@@ -4,14 +4,33 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { formatDistanceToNow } from 'date-fns'
 import type { QuizCardProps } from "@/lib/types"
+import { Trash2 } from "lucide-react"
+import axios from "axios"
+import { BACKEND_URL } from "@/lib/env"
+import { toast } from "sonner"
 
 export default function QuizCard({ name, length, created, desc, id }: QuizCardProps) {
   const router = useRouter()
   const formattedTime = formatDistanceToNow(new Date(created), { addSuffix: true })
 
+  async function deleteQuiz() {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/quiz/delete/${id}`)
+      toast(`${name} Quiz Deleted`)
+    } catch (error) {
+      toast("Error occured, please try again!")
+    }
+  }
+
   return (
-    <div className="bg-card rounded-lg shadow-sm p-6">
-      <h3 className="font-semibold text-lg mb-2">{name}</h3>
+    <div className="group bg-card rounded-lg shadow-sm p-6">
+      <div className="flex justify-between">
+        <h3 className="font-semibold text-lg mb-2">{name}</h3>
+        <Trash2
+          onClick={deleteQuiz}
+          size={17}
+          className="text-red-400 cursor-pointer group-hover:block hidden transition-all" />
+      </div>
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm text-primary/60">{length} questions</span>
         <span className="text-sm text-primary/60">Created {formattedTime}</span>

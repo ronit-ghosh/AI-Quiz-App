@@ -5,21 +5,43 @@ export const getStatsById = async (id: string) => {
     const stats = await prisma.stats.findFirst({
         where: {
             id
-        }
-    })
-
-    if (!stats || !stats.categoryId) throw new Error(Messages.ERROR.STATS_NOT_FOUND)
-
-    const categoryName = await prisma.categories.findFirst({
-        where: {
-            id: stats.categoryId
         },
         select: {
-            name: true
+            answeredQuestions: true,
+            correctAnswers: true,
+            incorrectAnswers: true,
+            score: true,
+            totalQuestions: true,
+            createdAt: true,
+            category: {
+                select: {
+                    name: true,
+                    questions: {
+                        select: {
+                            id: true,
+                            question: true,
+                            options: {
+                                select: {
+                                    optionId: true,
+                                    option: true
+                                }
+                            },
+                            correct: true,
+                            explanation: true
+                        }
+                    }
+                }
+            },
+            answers: {
+                select: {
+                    optionId: true,
+                    questionId: true
+                }
+            }
         }
     })
 
-    if (!categoryName) throw new Error(Messages.ERROR.CATEGORY_NOT_FOUND)
+    if (!stats) throw new Error(Messages.ERROR.STATS_NOT_FOUND)
 
-    return { stats, categoryName: categoryName.name }
+    return { stats }
 }

@@ -1,12 +1,17 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { CheckCircle, Clock, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ParamValue } from "next/dist/server/request/params"
-import { useQuizStore } from "@repo/store"
+import { useQuizStore, useStatStore } from "@repo/store"
+import { useRouter } from "next/navigation"
+import QuizResults from "../quiz-results"
+import { toast } from "sonner"
 
 export default function StartQuiz({ id }: { id: ParamValue }) {
+  const router = useRouter()
+  const [creatingStat, setCreatingStat] = useState(false)
   const {
     fetchQuizData,
     quizData,
@@ -18,14 +23,47 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
     handleReset,
     selectedAnswer,
     showExplanation,
-    userAnswers
+    userAnswers,
+    quizCompleted
   } = useQuizStore()
+  const { calculateStats, createStats } = useStatStore()
 
   useEffect(() => {
     fetchQuizData(String(id))
   }, [id])
 
   if (!quizData) return <div />
+
+  const createStatsAsync = async () => {
+    if (!quizCompleted) return
+    setCreatingStat(true)
+
+    const {
+      answeredQuestions,
+      correctAnswers,
+      incorrectAnswers,
+      score
+    } = calculateStats()
+
+    if (
+      !answeredQuestions ||
+      !correctAnswers ||
+      !incorrectAnswers ||
+      !score
+    ) return
+    const statsId = await createStats(
+      answeredQuestions,
+      correctAnswers,
+      incorrectAnswers,
+      score,
+      String(id)
+    )
+    setCreatingStat(false)
+    if (statsId) {
+      toast(statsId)
+      router.push(`/stats/${statsId}`)
+    }
+  }
 
   const currentQuestion = quizData.questions[currentQuestionIndex]
   const totalQuestions = quizData.questions.length
@@ -103,21 +141,37 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
               disabled={currentQuestionIndex === 0}>
               Previous Question
             </Button>
-
-            <div className="flex gap-2">
+            {creatingStat ?
               <Button
-                variant="outline"
-                onClick={handleSkip}
-                disabled={selectedAnswer !== null}>
-                Skip
-              </Button>
-              <Button
-                onClick={handleNext}
-                disabled={selectedAnswer === null && userAnswers[Number(currentQuestion!.id)] === undefined}
-              >
-                Next Question
-              </Button>
-            </div>
+                disabled
+                variant="ghost">
+                Generating Stats...
+              </Button> :
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleSkip()
+                    if (currentQuestionIndex === quizData.questions.length - 1) {
+                      createStatsAsync()
+                    }
+                  }}
+                  disabled={selectedAnswer !== null || creatingStat}>
+                  Skip
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleNext()
+                    if (currentQuestionIndex === quizData.questions.length - 1) {
+                      createStatsAsync()
+                    }
+                  }}
+                  disabled={selectedAnswer === null && userAnswers[Number(currentQuestion!.id)] === undefined || creatingStat}
+                >
+                  Next Question
+                </Button>
+              </div>
+            }
           </div>
 
           {showExplanation && (

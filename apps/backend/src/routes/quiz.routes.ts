@@ -11,6 +11,9 @@ import {
     getQuizesBulkController,
     getQuizesByIdController
 } from "../controllers/get-quiz.controller";
+import {
+    deleteQuizByIdController
+} from "../controllers/delete-quiz.controller";
 
 export const router = Router();
 
@@ -24,3 +27,4 @@ router.post("/create/text", createFromTextController)
 router.get("/get", getQuizesBulkController)
 router.get("/get/category", getCategoriesBulkController)
 router.get("/get/:id", getQuizesByIdController)
+router.delete("/delete/:id", deleteQuizByIdController)
