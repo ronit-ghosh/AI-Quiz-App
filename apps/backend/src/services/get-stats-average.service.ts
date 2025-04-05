@@ -15,7 +15,7 @@ export const getAverageStats = async () => {
         avg += Number(response[i]?.score)
     }
 
-    const average = avg / response.length
+    const average = (avg / response.length).toFixed(2)
 
     return average
 }

@@ -1,9 +1,11 @@
 import { Messages } from "@repo/constants/messages"
 import { prisma } from "@repo/db/client"
 
-export const getStats = async () => {
+export const getStats = async (exclude: number, limit: number) => {
+
     const stats = await prisma.stats.findMany({
         select: {
+            _count: true,
             id: true,
             createdAt: true,
             answeredQuestions: true,
@@ -20,8 +22,8 @@ export const getStats = async () => {
         orderBy: {
             createdAt: "desc"
         },
-        take: 5,
-        
+        take: limit,
+        skip: exclude
     })
 
     if (!stats) throw new Error(Messages.ERROR.STATS_NOT_FOUND)

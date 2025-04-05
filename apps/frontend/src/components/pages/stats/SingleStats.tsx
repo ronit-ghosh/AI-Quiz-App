@@ -1,11 +1,12 @@
-"use client"
-
+import { Button } from "@/components/ui/button";
 import StatsPageCard from "./StatsPageCard"
-import { ClipboardList, CheckCircle, XCircle, Award, BarChart3, ArrowRight } from 'lucide-react';
-import { Button } from "./ui/button";
+import { ClipboardList, CheckCircle, XCircle, Award, BarChart3, ArrowRight, Trash2Icon } from 'lucide-react';
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { BACKEND_URL } from "@/lib/env";
+import { toast } from "sonner";
 
-export default function StatsPage(props: {
+export default function SingleStats(props: {
   id?: string
   answeredQuestions: number
   correctAnswers: number
@@ -29,16 +30,32 @@ export default function StatsPage(props: {
   } = props
   const router = useRouter()
 
+  async function handleDeleteStat() {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/stats/delete/${id}`)
+      toast("Stat deleted")
+    } catch (error) {
+      console.error(error)
+      toast("Error while deleting stat!")
+    }
+  }
+
   return (
-    <div className="max-w-5xl w-full mx-auto">
-      <div className="bg-card backdrop-blur-lg rounded-2xl p-6 border border-secondary-700/50">
-        <div className="mb-4 flex gap-2 items-center">
-          <span className="text-lg font-bold uppercase">
-            {name}
-          </span>
-          <span className="text-primary/70 capitalize text-sm">
-            {time}
-          </span>
+    <div className="max-w-6xl w-full mx-auto">
+      <div className="group bg-card backdrop-blur-lg rounded-2xl p-6 border border-secondary-700/50">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex gap-2 items-center">
+            <span className="text-lg font-bold uppercase">
+              {name}
+            </span>
+            <span className="text-primary/70 capitalize text-sm">
+              {time}
+            </span>
+          </div>
+          <Trash2Icon
+            onClick={handleDeleteStat}
+            size={16}
+            className="text-red-500 cursor-pointer group-hover:block hidden" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
           <StatsPageCard
@@ -80,7 +97,7 @@ export default function StatsPage(props: {
 
         <div className={`grid place-items-end ${isReviewPage ? "hidden" : "block"}`}>
           <Button onClick={
-            () => router.push(`/stats/${id}`)
+            () => router.push(`/app/stats/${id}`)
           }>
             Review Answers
             <ArrowRight className="h-5 w-5 ml-2" />

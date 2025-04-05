@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import { getQuizesBulk } from "../services/get-quizes-bulk.service";
 import { getQuizesById } from "../services/get-quizes-by-id.service";
 import { StatusCodes } from "@repo/constants/status-codes";
 import { Messages } from "@repo/constants/messages";
 import { getCategoriesBulk } from "../services/get-category-bulk.service";
+import { getQuizzesLength } from "../services/get-quizzes-length.service";
 
 export const getQuizesByIdController = async (req: Request, res: Response) => {
     try {
@@ -25,12 +25,10 @@ export const getQuizesByIdController = async (req: Request, res: Response) => {
     }
 }
 
-export const getQuizesBulkController = async (_: Request, res: Response) => {
+export const getQuizzesLengthController = async (_: Request, res: Response) => {
     try {
-        const questions = await getQuizesBulk()
-
-        res.status(StatusCodes.OK)
-            .json(questions)
+        const quizLength = await getQuizzesLength()
+        res.status(StatusCodes.OK).json({ quizLength })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ msg: (error as Error).message })
@@ -38,9 +36,13 @@ export const getQuizesBulkController = async (_: Request, res: Response) => {
     }
 }
 
-export const getCategoriesBulkController = async (_: Request, res: Response) => {
+export const getCategoriesBulkController = async (req: Request, res: Response) => {
+    const page = parseInt(String(req.query.page) || "1", 10)
+    const limit = 6
+    const exclude = (page - 1) * limit
+
     try {
-        const categories = await getCategoriesBulk()
+        const categories = await getCategoriesBulk(exclude, limit)
 
         res.status(StatusCodes.OK)
             .json(categories)

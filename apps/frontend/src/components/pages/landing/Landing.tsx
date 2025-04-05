@@ -1,8 +1,8 @@
-import CreateQuizModal from "@/components/create-quiz-modal"
-import CreateQuiz from "./Create-Quiz"
-import RecentQuiz from "./Recent-Quiz"
+import CreateQuizModal from "./create-quiz-modal"
+import CreateQuiz from "./CreateQuiz"
+import RecentQuiz from "./RecentQuiz"
 import Stats from "./Stats"
-import CreateQuizTips from "./Create-Quiz-Tips"
+import CreateQuizTips from "./CreateQuizTips"
 
 export default function Landing() {
   return (

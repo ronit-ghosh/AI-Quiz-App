@@ -8,8 +8,8 @@ import {
 } from "../controllers/quiz.controller";
 import {
     getCategoriesBulkController,
-    getQuizesBulkController,
-    getQuizesByIdController
+    getQuizesByIdController,
+    getQuizzesLengthController
 } from "../controllers/get-quiz.controller";
 import {
     deleteQuizByIdController
@@ -24,7 +24,7 @@ router.post("/create/pdf", createFromPdfController)
 router.post("/create/pdf/bulk", upload.single("pdf"), createFromPdfBulkController)
 router.post("/create/image", upload.single("image"), createFromImageController)
 router.post("/create/text", createFromTextController)
-router.get("/get", getQuizesBulkController)
 router.get("/get/category", getCategoriesBulkController)
+router.get("/get/length", getQuizzesLengthController)
 router.get("/get/:id", getQuizesByIdController)
 router.delete("/delete/:id", deleteQuizByIdController)

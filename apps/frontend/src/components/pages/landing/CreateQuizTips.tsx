@@ -1,4 +1,4 @@
-import TipItem from "../tip-item";
+import TipItem from "./tip-item";
 
 export default function CreateQuizTips() {
     return (

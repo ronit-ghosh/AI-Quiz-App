@@ -1,12 +1,12 @@
 "use client"
 
-import axios, { AxiosError } from 'axios'
-import QuizOption from '../quiz-option'
+import axios from 'axios'
 import { FileImage, FileText, FileType } from 'lucide-react'
 import { BACKEND_URL } from '@/lib/env'
 import pdfToText from "react-pdftotext"
 import { toast } from 'sonner'
 import { useState } from 'react'
+import QuizOption from './quiz-option'
 
 export default function CreateQuiz() {
     const [loading, setLoading] = useState(false)

@@ -1,9 +1,10 @@
 import { Messages } from "@repo/constants/messages"
 import { prisma } from "@repo/db/client"
 
-export const getCategoriesBulk = async () => {
+export const getCategoriesBulk = async (exclude: number, limit: number) => {
     const response = await prisma.categories.findMany({
         select: {
+            _count: true,
             id: true,
             name: true,
             desc: true,
@@ -17,7 +18,8 @@ export const getCategoriesBulk = async () => {
         orderBy: {
             createdAt: 'desc'
         },
-        take: 6
+        take: limit,
+        skip: exclude
     })
 
     if (!response) throw new Error(Messages.ERROR.CATEGORY_NOT_FOUND)

@@ -1,8 +1,7 @@
 import { create, type StateCreator } from "zustand"
-import type { QuizData } from "../types"
+import type { BulkStatsTypes, QuizData, QuizzesTypes } from "../types"
 import axios from "axios"
 import { BACKEND_URL } from "../env"
-import { useStatStore } from "./StatStore"
 
 interface QuizStoreTypes {
     quizData: QuizData | null
@@ -10,6 +9,7 @@ interface QuizStoreTypes {
     currentQuestionIndex: number
     selectedAnswer: string | null
     showExplanation: boolean
+    statsData: BulkStatsTypes[]
     fetchQuizData: (id: string) => void
     handleNext: () => void
     handlePrev: () => void
@@ -23,15 +23,25 @@ interface QuizStoreTypes {
         questionId: number,
         optionId: string | null
     }[]
+    fetchCategories: (page: number) => void
+    fetchQuizLen: () => void
+    loading: boolean
+    quizzes: QuizzesTypes[]
+    quizzesLength: number
 }
 
-const QuizStore: StateCreator<QuizStoreTypes> = (set) => ({
+const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
     quizData: null,
     quizCompleted: false,
     currentQuestionIndex: 0,
     userAnswers: [],
     selectedAnswer: null,
     showExplanation: false,
+    statsData: [],
+    currentStatPage: 1,
+    loading: false,
+    quizzesLength: 0,
+    quizzes: [],
 
     fetchQuizData: async (id) => {
         try {
@@ -105,8 +115,35 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set) => ({
             showExplanation: false
         })
         return {}
-    })
+    }),
 
+    fetchQuizLen: async () => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`)
+            set({ quizzesLength: response.data.quizLength })
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    fetchCategories: async (page) => {
+        const { quizzesLength } = get()
+        console.log(quizzesLength)
+        const max = page > Math.ceil(quizzesLength / 6)
+        if (page < 1 || max) return
+
+        try {
+            set({ loading: true })
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/category?page=${page}`)
+            console.log(response.data.categories)
+            set({
+                quizzes: response.data.categories,
+                loading: false
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    },
 })
 
 export const useQuizStore = create(QuizStore)

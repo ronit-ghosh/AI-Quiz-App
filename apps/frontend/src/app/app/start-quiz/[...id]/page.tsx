@@ -1,6 +1,6 @@
 "use client"
 
-import StartQuiz from '@/components/sections/Start-Quiz'
+import StartQuiz from '@/components/pages/quiz/Start-Quiz'
 import { useParams } from 'next/navigation'
 import React from 'react'
 

@@ -2,6 +2,7 @@ import { create, type StateCreator } from "zustand"
 import { useQuizStore } from "./QuizStore";
 import axios from "axios";
 import { BACKEND_URL } from "../env";
+import type { BulkStatsTypes } from "../types";
 
 interface StatStoreTypes {
     calculateStats: () => {
@@ -10,7 +11,6 @@ interface StatStoreTypes {
         incorrectAnswers: number,
         score?: number
     }
-
     createStats: (
         answeredQuestions: number,
         correctAnswers: number,
@@ -18,9 +18,17 @@ interface StatStoreTypes {
         score: number,
         categoryId: string
     ) => Promise<string>
+    fetchStats: (page: number) => void
+    fetchStatsLen: () => void
+    loading: boolean
+    statsData: BulkStatsTypes[]
+    statsLength: number
 }
 
-const StatStore: StateCreator<StatStoreTypes> = () => ({
+const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
+    statsData: [],
+    loading: false,
+    statsLength: 0,
     calculateStats: () => {
         const { quizData, userAnswers } = useQuizStore.getState();
 
@@ -63,7 +71,27 @@ const StatStore: StateCreator<StatStoreTypes> = () => ({
         } catch (error) {
             console.error(error)
         }
+    },
+
+    fetchStatsLen: async () => {
+        const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`)
+        set({ statsLength: response.data.statsLength })
+    },
+
+    fetchStats: async (page) => {
+        const { statsLength } = get()
+        const max = page > Math.ceil(statsLength / 5)
+        if (page < 1 || max) return
+        
+        try {
+            set({ loading: true })
+            const response = await axios.get(`${BACKEND_URL}/api/stats/get?page=${page}`)
+            set({ statsData: response.data.stats, loading: false })
+        } catch (error) {
+            console.error(error)
+        }
     }
+
 })
 
 export const useStatStore = create(StatStore)

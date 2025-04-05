@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ParamValue } from "next/dist/server/request/params"
 import { useQuizStore, useStatStore } from "@repo/store"
 import { useRouter } from "next/navigation"
-import QuizResults from "../quiz-results"
+import QuizResults from "./quiz-results"
 import { toast } from "sonner"
 
 export default function StartQuiz({ id }: { id: ParamValue }) {
@@ -61,7 +61,7 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
     setCreatingStat(false)
     if (statsId) {
       toast(statsId)
-      router.push(`/stats/${statsId}`)
+      router.push(`/app/stats/${statsId}`)
     }
   }
 

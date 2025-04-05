@@ -1,4 +1,4 @@
-export default function StatCard({ icon: Icon, label, value, bgColor, iconColor }: {
+export default function StatPageCard({ icon: Icon, label, value, bgColor, iconColor }: {
   icon: React.ElementType;
   label: string;
   value: number;

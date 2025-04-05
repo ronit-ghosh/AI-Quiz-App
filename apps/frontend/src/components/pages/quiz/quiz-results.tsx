@@ -115,7 +115,7 @@ export default function QuizResults({ id }: { id: ParamValue }) {
             <Button
               variant="outline"
               className="flex-1"
-              onClick={() => router.push("/")}>
+              onClick={() => router.push("/app")}>
               Back to Home
             </Button>
             <Button className="flex-1">

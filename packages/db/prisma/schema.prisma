@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  clerkId   String   @id
+  email     String   @unique
+  username  String
+  photo     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Categories {
   id        String      @id @default(uuid())
   name      String      @unique

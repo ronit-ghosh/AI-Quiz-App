@@ -18,14 +18,15 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@repo/constants": "*",
-    "@repo/validations": "*",
     "@google/generative-ai": "^0.24.0",
+    "@repo/constants": "*",
     "@repo/db": "*",
+    "@repo/validations": "*",
     "@types/multer": "^1.4.12",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "multer": "^1.4.5-lts.2",
-    "pdf-to-img": "^4.4.0"
+    "pdf-to-img": "^4.4.0",
+    "svix": "^1.63.1"
   }
 }

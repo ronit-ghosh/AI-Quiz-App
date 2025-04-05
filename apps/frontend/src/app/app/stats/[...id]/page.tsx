@@ -1,6 +1,6 @@
 "use client"
 
-import ReviewAnswers from "@/components/ReviewAnswers"
+import ReviewAnswers from "@/components/pages/stats/ReviewAnswers"
 import { BACKEND_URL } from "@/lib/env"
 import { StatTypes } from "@/lib/types"
 import axios from "axios"
@@ -20,7 +20,7 @@ export default function page() {
 
     return (
         <div>
-            {data && < ReviewAnswers data={data} />}
+            {data && <ReviewAnswers data={data} />}
         </div>
     )
 }

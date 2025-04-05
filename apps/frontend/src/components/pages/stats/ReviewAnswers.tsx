@@ -1,5 +1,4 @@
 import { Lightbulb } from "lucide-react";
-import StatsPage from "./StatsPage";
 import {
     Accordion,
     AccordionContent,
@@ -7,15 +6,15 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { StatTypes } from "@/lib/types";
-import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
+import SingleStats from "./SingleStats";
 
 export default function ReviewAnswers({ data }: { data: StatTypes }) {
     const time = formatDistanceToNow(new Date(data.createdAt), { addSuffix: true })
 
     return (
         <div className="my-10 max-w-5xl w-[95%] mx-auto">
-            <StatsPage
+            <SingleStats
                 answeredQuestions={data.answeredQuestions}
                 correctAnswers={data.correctAnswers}
                 incorrectAnswers={data.incorrectAnswers}

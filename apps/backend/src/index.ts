@@ -2,6 +2,7 @@ import express, { type Application } from "express";
 import cors from "cors"
 import { router as quizRouter } from "./routes/quiz.routes"
 import { router as statsRouter } from "./routes/stats.routes"
+import { router as clerkRouter } from "./routes/clerk.routes"
 
 export const app: Application = express()
 
@@ -15,3 +16,4 @@ app.use(cors({
 
 app.use("/api/quiz", quizRouter)
 app.use("/api/stats", statsRouter)
+app.use("/api/clerk", clerkRouter)
