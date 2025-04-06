@@ -1,8 +1,11 @@
 import { Messages } from "@repo/constants/messages";
 import { prisma } from "@repo/db/client"
 
-export const getAverageStats = async () => {
+export const getAverageStats = async (userId: string) => {
     const response = await prisma.stats.findMany({
+        where: {
+            userId
+        },
         select: {
             score: true
         }

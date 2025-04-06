@@ -1,10 +1,10 @@
 import { Messages } from "@repo/constants/messages"
 import { prisma } from "@repo/db/client"
 
-export const deleteQuizById = async (id: string) => {
-    const response = await prisma.categories.delete({
+export const deleteQuizById = async (id: string, userId: string) => {
+    const response = await prisma.categories.deleteMany({
         where: {
-            id
+            AND: [{ id }, { userId }]
         }
     })
 

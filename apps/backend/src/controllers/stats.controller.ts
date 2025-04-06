@@ -6,6 +6,7 @@ import { Messages } from "@repo/constants/messages"
 
 export const createStatsController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const {
             totalQuestions,
             answeredQuestions,
@@ -32,7 +33,7 @@ export const createStatsController = async (req: Request, res: Response) => {
             return
         }
 
-        const statsId = await createStats(parsedValues.data)
+        const statsId = await createStats({ ...parsedValues.data, userId })
 
         res.status(StatusCodes.OK)
             .json({ msg: Messages.SUCCESS.STATS_CREATED, statsId })

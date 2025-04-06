@@ -18,6 +18,7 @@ model User {
 
 model Categories {
   id        String      @id @default(uuid())
+  userId    String
   name      String      @unique
   desc      String
   questions Questions[]
@@ -28,6 +29,7 @@ model Categories {
 
 model Questions {
   id          Int        @id @default(autoincrement())
+  userId      String
   question    String
   categoryId  String
   category    Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -46,6 +48,7 @@ model Options {
 
 model Stats {
   id                String     @id @default(cuid())
+  userId            String
   totalQuestions    Int
   answeredQuestions Int
   correctAnswers    Int
@@ -60,6 +63,7 @@ model Stats {
 
 model Answers {
   id         String   @id @default(cuid())
+  userId     String
   questionId Int
   optionId   String
   categoryId String

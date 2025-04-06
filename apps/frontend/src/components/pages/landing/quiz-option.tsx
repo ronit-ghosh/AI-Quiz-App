@@ -163,7 +163,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
                 Cancel
               </Button>
               <Button
-                disabled={loading || !file || !categoryDesc || !categoryName}
+                disabled={loading || !categoryDesc || !categoryName || !prompt && !file}
                 onClick={onSubmit}>
                 {loading ? "Generating..." : "Create Quiz"}
               </Button>

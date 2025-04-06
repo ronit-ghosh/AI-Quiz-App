@@ -7,8 +7,10 @@ import pdfToText from "react-pdftotext"
 import { toast } from 'sonner'
 import { useState } from 'react'
 import QuizOption from './quiz-option'
+import { useAuth } from '@clerk/nextjs'
 
 export default function CreateQuiz() {
+    const { getToken } = useAuth()
     const [loading, setLoading] = useState(false)
 
     async function handleGeneration(
@@ -18,6 +20,7 @@ export default function CreateQuiz() {
         file?: File,
         prompt?: string
     ) {
+        const token = await getToken()
         if (title === "text") {
             if (categoryDesc === "" || categoryName === "" || prompt === "") {
                 toast("Fill the input fields!")
@@ -29,6 +32,10 @@ export default function CreateQuiz() {
                     categoryName,
                     categoryDesc,
                     text: prompt
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 })
                 toast(response.data.categoryId)
                 setLoading(false)
@@ -50,6 +57,10 @@ export default function CreateQuiz() {
                         categoryName,
                         categoryDesc,
                         text
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     })
                     toast(response.data.categoryId)
                     setLoading(false)
@@ -75,6 +86,7 @@ export default function CreateQuiz() {
                 const response = await axios.post(`${BACKEND_URL}/api/quiz/create/pdf/bulk`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
                     }
                 })
                 toast(response.data.categoryId)
@@ -100,6 +112,7 @@ export default function CreateQuiz() {
                 const response = await axios.post(`${BACKEND_URL}/api/quiz/create/image`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
                     }
                 })
                 toast(response.data.categoryId)

@@ -3,9 +3,10 @@ import { deleteQuizById } from "../services/delete-quiz-by-id.service";
 import { StatusCodes } from "@repo/constants/status-codes";
 
 export const deleteQuizByIdController = async (req: Request, res: Response) => {
-    const id = req.params.id
     try {
-        await deleteQuizById(String(id))
+        const userId = req.userId as string
+        const id = req.params.id
+        await deleteQuizById(String(id), userId)
         res.json({ msg: "Quiz Deleted" })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)

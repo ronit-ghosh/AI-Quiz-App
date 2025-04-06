@@ -6,22 +6,30 @@ import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useQuizStore } from '@repo/store'
 import { useEffect, useState } from 'react'
+import { useAuth } from '@clerk/nextjs'
 
 export default function RecentQuiz() {
     const { quizzes, fetchCategories, fetchQuizLen, quizzesLength, loading } = useQuizStore()
     const [page, setPage] = useState(1)
-
+    const { getToken } = useAuth()
     useEffect(() => {
-        fetchQuizLen()
+        (async function fetchData() {
+            const token = await getToken()
+            fetchQuizLen(token!)
+        })()
     }, [])
 
     useEffect(() => {
-        fetchCategories(page)
+        (async function fetchData() {
+            const token = await getToken()
+            fetchCategories(page, token!)
+        })()
     }, [page, quizzesLength])
-    
-    if (quizzesLength === 0) return (
-        <div />
-    )
+
+    async function fetchData() {
+        const token = await getToken()
+        fetchCategories(page, token!)
+    }
 
     return (
         <>
@@ -31,30 +39,37 @@ export default function RecentQuiz() {
                     <h2 className="text-2xl font-bold">Recent Quizzes</h2>
                     <RotateCcw
                         size={18}
-                        onClick={() => fetchCategories(page)}
+                        onClick={() => fetchData()}
                         className='cursor-pointer active:-rotate-45 transition-transform mt-1.5' />
                 </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
-                {
-                    loading ?
-                        <>
-                            <Skeleton className='w-full h-39' />
-                            <Skeleton className='w-full h-39' />
-                            <Skeleton className='w-full h-39' />
-                        </> :
-                        quizzes?.map((category, i) => {
-                            return <QuizCard
-                                key={i}
-                                id={category.id}
-                                name={category.name}
-                                desc={category.desc}
-                                length={category.length}
-                                created={category.created}
-                            />
-                        })
-                }
-            </div>
+            {
+                quizzesLength === 0 ?
+                    <div className="text-xl text-center my-10 underline">
+                        You haven't created any quizzes yet
+                    </div> :
+                    <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
+
+                        {
+                            loading ?
+                                <>
+                                    <Skeleton className='w-full h-39' />
+                                    <Skeleton className='w-full h-39' />
+                                    <Skeleton className='w-full h-39' />
+                                </> :
+                                quizzes?.map((category, i) => {
+                                    return <QuizCard
+                                        key={i}
+                                        id={category.id}
+                                        name={category.name}
+                                        desc={category.desc}
+                                        length={category.length}
+                                        created={category.created}
+                                    />
+                                })
+                        }
+                    </div>
+            }
             <div className="flex items-center justify-center gap-2 mx-auto w-full mb-12">
                 <Button
                     disabled={page === 1}

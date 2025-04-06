@@ -7,10 +7,15 @@ import type { Questions } from "../types/quiz.types";
 import { prisma } from "@repo/db/client";
 import fs from "node:fs"
 import path from "path"
+import type { CreateQuizFromMediaTypes } from "@repo/validations/inferred-types";
 
-export const createQuizFromImage = async (data: any) => {
-    const { categoryName, categoryDesc, mediaBuffer } = data
-    
+interface DataTypes extends CreateQuizFromMediaTypes {
+    userId: string
+}
+
+export const createQuizFromImage = async (data: DataTypes) => {
+    const { categoryName, categoryDesc, mediaBuffer, userId } = data
+
     const tempFilePath = path.join(__dirname, `temp-${Date.now()}.png`) as string;
 
     const fileCreated = fs.writeFileSync(tempFilePath, Buffer.from(mediaBuffer));
@@ -54,12 +59,12 @@ export const createQuizFromImage = async (data: any) => {
     if (!result.response.candidates) throw new Error(Messages.ERROR.RESPONSE_NOT_GENERATED)
 
     const actualQuestions = result.response.candidates[0]?.content.parts[0]?.text
-    const parsedQuestions = JSON.parse(actualQuestions?.replace(/^```json\s*|\s*```$/g, '')!)
+    const parsedQuestions = JSON.parse(actualQuestions?.replace(/^```json\s*|\s*```$/g, '').replace(/,\s*([\]}])/g, '$1')!)
     const quizes: Questions[] = parsedQuestions?.questions
 
-    let categoryId = await prisma.categories.findUnique({
+    let categoryId = await prisma.categories.findFirst({
         where: {
-            name: categoryName
+            AND: [{ userId }, { name: categoryName }]
         },
         select: {
             id: true
@@ -69,6 +74,7 @@ export const createQuizFromImage = async (data: any) => {
     if (!categoryId) {
         categoryId = await prisma.categories.create({
             data: {
+                userId,
                 name: categoryName,
                 desc: categoryDesc,
             },
@@ -81,6 +87,7 @@ export const createQuizFromImage = async (data: any) => {
     for (const quiz of quizes) {
         await prisma.questions.create({
             data: {
+                userId,
                 categoryId: categoryId.id,
                 correct: quiz.correct,
                 question: quiz.question,

@@ -2,9 +2,14 @@ import { Messages } from "@repo/constants/messages";
 import { prisma } from "@repo/db/client";
 import type { CreateStatsTypes } from "@repo/validations/inferred-types";
 
-export const createStats = async (data: CreateStatsTypes) => {
+interface DataTypes extends CreateStatsTypes {
+    userId: string
+}
+
+export const createStats = async (data: DataTypes) => {
     const response = await prisma.stats.create({
         data: {
+            userId: data.userId,
             answeredQuestions: data.answeredQuestions,
             correctAnswers: data.correctAnswers,
             incorrectAnswers: data.incorrectAnswers,
@@ -13,6 +18,7 @@ export const createStats = async (data: CreateStatsTypes) => {
             categoryId: data.categoryId,
             answers: {
                 create: data.answers.map((ans) => ({
+                    userId: data.userId,
                     categoryId: data.categoryId,
                     optionId: ans.optionId,
                     questionId: ans.questionId,

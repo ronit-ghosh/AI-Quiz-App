@@ -7,6 +7,7 @@ import { getQuizzesLength } from "../services/get-quizzes-length.service";
 
 export const getQuizesByIdController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const { id } = req.params
 
         if (typeof id !== 'string' || !id) {
@@ -15,7 +16,7 @@ export const getQuizesByIdController = async (req: Request, res: Response) => {
             return
         }
 
-        const questions = await getQuizesById(id)
+        const questions = await getQuizesById(id, userId)
 
         res.status(StatusCodes.OK).json(questions)
     } catch (error) {
@@ -25,9 +26,10 @@ export const getQuizesByIdController = async (req: Request, res: Response) => {
     }
 }
 
-export const getQuizzesLengthController = async (_: Request, res: Response) => {
+export const getQuizzesLengthController = async (req: Request, res: Response) => {
     try {
-        const quizLength = await getQuizzesLength()
+        const userId = req.userId as string
+        const quizLength = await getQuizzesLength(userId)
         res.status(StatusCodes.OK).json({ quizLength })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -40,9 +42,9 @@ export const getCategoriesBulkController = async (req: Request, res: Response) =
     const page = parseInt(String(req.query.page) || "1", 10)
     const limit = 6
     const exclude = (page - 1) * limit
-
+    const userId = req.userId as string
     try {
-        const categories = await getCategoriesBulk(exclude, limit)
+        const categories = await getCategoriesBulk(exclude, limit, userId)
 
         res.status(StatusCodes.OK)
             .json(categories)

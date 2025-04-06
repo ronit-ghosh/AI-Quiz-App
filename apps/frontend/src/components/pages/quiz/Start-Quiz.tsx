@@ -8,9 +8,11 @@ import { useQuizStore, useStatStore } from "@repo/store"
 import { useRouter } from "next/navigation"
 import QuizResults from "./quiz-results"
 import { toast } from "sonner"
+import { useAuth } from "@clerk/nextjs"
 
 export default function StartQuiz({ id }: { id: ParamValue }) {
   const router = useRouter()
+  const { getToken } = useAuth()
   const [creatingStat, setCreatingStat] = useState(false)
   const {
     fetchQuizData,
@@ -29,7 +31,10 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
   const { calculateStats, createStats } = useStatStore()
 
   useEffect(() => {
-    fetchQuizData(String(id))
+    (async function fetchData() {
+      const token = await getToken()
+      fetchQuizData(String(id), token!)
+    })()
   }, [id])
 
   if (!quizData) return <div />
@@ -37,6 +42,7 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
   const createStatsAsync = async () => {
     if (!quizCompleted) return
     setCreatingStat(true)
+    const token = await getToken()
 
     const {
       answeredQuestions,
@@ -56,7 +62,8 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
       correctAnswers,
       incorrectAnswers,
       score,
-      String(id)
+      String(id),
+      token!
     )
     setCreatingStat(false)
     if (statsId) {

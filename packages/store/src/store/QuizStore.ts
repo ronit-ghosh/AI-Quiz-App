@@ -10,7 +10,7 @@ interface QuizStoreTypes {
     selectedAnswer: string | null
     showExplanation: boolean
     statsData: BulkStatsTypes[]
-    fetchQuizData: (id: string) => void
+    fetchQuizData: (id: string, token: string) => void
     handleNext: () => void
     handlePrev: () => void
     handleSkip: () => void
@@ -23,8 +23,8 @@ interface QuizStoreTypes {
         questionId: number,
         optionId: string | null
     }[]
-    fetchCategories: (page: number) => void
-    fetchQuizLen: () => void
+    fetchCategories: (page: number, token: string) => void
+    fetchQuizLen: (token: string) => void
     loading: boolean
     quizzes: QuizzesTypes[]
     quizzesLength: number
@@ -43,9 +43,13 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
     quizzesLength: 0,
     quizzes: [],
 
-    fetchQuizData: async (id) => {
+    fetchQuizData: async (id, token) => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/${id}`)
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             set({ quizData: response.data })
         } catch (error) {
             console.error("Error fetching quiz data: ", error)
@@ -117,16 +121,20 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
         return {}
     }),
 
-    fetchQuizLen: async () => {
+    fetchQuizLen: async (token) => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`)
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             set({ quizzesLength: response.data.quizLength })
         } catch (error) {
             console.error(error)
         }
     },
 
-    fetchCategories: async (page) => {
+    fetchCategories: async (page, token) => {
         const { quizzesLength } = get()
         console.log(quizzesLength)
         const max = page > Math.ceil(quizzesLength / 6)
@@ -134,7 +142,11 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
 
         try {
             set({ loading: true })
-            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/category?page=${page}`)
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/category?page=${page}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             console.log(response.data.categories)
             set({
                 quizzes: response.data.categories,

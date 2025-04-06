@@ -1,8 +1,11 @@
 import { Messages } from "@repo/constants/messages"
 import { prisma } from "@repo/db/client"
 
-export const getCategoriesBulk = async (exclude: number, limit: number) => {
+export const getCategoriesBulk = async (exclude: number, limit: number, userId: string) => {
     const response = await prisma.categories.findMany({
+        where: {
+            userId
+        },
         select: {
             _count: true,
             id: true,

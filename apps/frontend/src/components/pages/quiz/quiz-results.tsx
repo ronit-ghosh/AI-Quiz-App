@@ -1,12 +1,13 @@
 "use client"
 
-import { CheckCircle, XCircle, Clock, Award } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { BACKEND_URL } from "@/lib/env"
 import { ParamValue } from "next/dist/server/request/params"
+import { useAuth } from "@clerk/nextjs"
+import { Award, CheckCircle, Clock, XCircle } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 interface StatsDataTypes {
   stats: {
@@ -21,12 +22,18 @@ interface StatsDataTypes {
 
 export default function QuizResults({ id }: { id: ParamValue }) {
   const router = useRouter()
+  const { getToken } = useAuth()
   const [data, setData] = useState<StatsDataTypes>()
 
   useEffect(() => {
     (async function getStats() {
+      const token = await getToken()
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/stats/get/${id}`)
+        const response = await axios.get(`${BACKEND_URL}/api/stats/get/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         setData(response.data)
       } catch (error) {
         console.error(error)

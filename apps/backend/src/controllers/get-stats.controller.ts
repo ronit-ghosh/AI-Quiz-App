@@ -8,12 +8,13 @@ import { Messages } from "@repo/constants/messages"
 
 export const getStatsController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const page = parseInt(String(req.query.page) || "1", 10)
 
         const limit = 5
         const exclude = (page - 1) * limit
 
-        const stats = await getStats(exclude, limit)
+        const stats = await getStats(exclude, limit, userId)
 
         res.status(StatusCodes.OK)
             .json({ stats })
@@ -24,9 +25,10 @@ export const getStatsController = async (req: Request, res: Response) => {
     }
 }
 
-export const getStatsLengthController = async (_: Request, res: Response) => {
+export const getStatsLengthController = async (req: Request, res: Response) => {
     try {
-        const statsLength = await getStatsLength()
+        const userId = req.userId as string
+        const statsLength = await getStatsLength(userId)
         res.status(StatusCodes.OK)
             .json({ statsLength })
     } catch (error) {
@@ -36,9 +38,10 @@ export const getStatsLengthController = async (_: Request, res: Response) => {
     }
 }
 
-export const getAverageStatsController = async (_: Request, res: Response) => {
+export const getAverageStatsController = async (req: Request, res: Response) => {
     try {
-        const average = await getAverageStats()
+        const userId = req.userId as string
+        const average = await getAverageStats(userId)
         res.status(StatusCodes.OK)
             .json({ average })
     } catch (error) {
@@ -50,13 +53,14 @@ export const getAverageStatsController = async (_: Request, res: Response) => {
 
 export const getStatsByIdController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const id = req.params.id
         if (!id) {
             res.status(StatusCodes.FORBIDDEN)
                 .json({ msg: Messages.ERROR.PARAMS_NOT_FOUND })
             return
         }
-        const stats = await getStatsById(id)
+        const stats = await getStatsById(id, userId)
 
         res.status(StatusCodes.OK)
             .json(stats)

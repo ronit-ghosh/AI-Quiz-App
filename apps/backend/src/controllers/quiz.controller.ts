@@ -9,6 +9,7 @@ import { createQuizFromImage } from "../services/create-quiz-from-image.service"
 
 export const createFromPdfController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const { text, categoryName, categoryDesc } = req.body
 
         const parsedValues = createQuizFromTextValidation.safeParse({ text, categoryName, categoryDesc })
@@ -18,7 +19,7 @@ export const createFromPdfController = async (req: Request, res: Response) => {
             return
         }
 
-        const categoryId = await createQuizFromPdf(parsedValues.data)
+        const categoryId = await createQuizFromPdf({ text, categoryDesc, categoryName, userId })
 
         res.status(StatusCodes.CREATED)
             .json({ msg: Messages.SUCCESS.QUIZ_CREATED, categoryId })
@@ -31,6 +32,7 @@ export const createFromPdfController = async (req: Request, res: Response) => {
 
 export const createFromPdfBulkController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const { categoryName, categoryDesc } = req.body
         const mediaBuffer = req.file?.buffer
 
@@ -47,7 +49,7 @@ export const createFromPdfBulkController = async (req: Request, res: Response) =
             return
         }
 
-        const categoryId = await createQuizFromPdfBulk({ categoryName, categoryDesc, mediaBuffer })
+        const categoryId = await createQuizFromPdfBulk({ categoryName, categoryDesc, mediaBuffer, userId })
 
         res.status(StatusCodes.OK)
             .json({ msg: Messages.SUCCESS.QUIZ_CREATED, categoryId })
@@ -60,6 +62,7 @@ export const createFromPdfBulkController = async (req: Request, res: Response) =
 
 export const createFromTextController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const { text, categoryName, categoryDesc } = req.body
 
         const parsedValues = createQuizFromTextValidation.safeParse({ text, categoryName, categoryDesc })
@@ -69,7 +72,7 @@ export const createFromTextController = async (req: Request, res: Response) => {
             return
         }
 
-        const categoryId = await createQuizFromText(parsedValues.data)
+        const categoryId = await createQuizFromText({ text, categoryName, categoryDesc, userId })
 
         res.status(StatusCodes.CREATED)
             .json({ msg: Messages.SUCCESS.QUIZ_CREATED, categoryId })
@@ -82,9 +85,10 @@ export const createFromTextController = async (req: Request, res: Response) => {
 
 export const createFromImageController = async (req: Request, res: Response) => {
     try {
+        const userId = req.userId as string
         const { categoryName, categoryDesc } = req.body
         const mediaBuffer = req.file?.buffer
-        console.log("Controller buffer: ", mediaBuffer)
+
         if (!mediaBuffer) {
             res.status(StatusCodes.NOT_FOUND)
                 .json({ msg: Messages.ERROR.EMPTY_IMAGE })
@@ -104,7 +108,7 @@ export const createFromImageController = async (req: Request, res: Response) => 
             return
         }
 
-        const categoryId = await createQuizFromImage({ categoryName, categoryDesc, mediaBuffer })
+        const categoryId = await createQuizFromImage({ categoryName, categoryDesc, mediaBuffer, userId })
 
         res.status(StatusCodes.OK)
             .json({ msg: Messages.SUCCESS.QUIZ_CREATED, categoryId })

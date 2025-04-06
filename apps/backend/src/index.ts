@@ -3,6 +3,7 @@ import cors from "cors"
 import { router as quizRouter } from "./routes/quiz.routes"
 import { router as statsRouter } from "./routes/stats.routes"
 import { router as clerkRouter } from "./routes/clerk.routes"
+import AuthMiddleware from "./middlewares/auth.middleware";
 
 export const app: Application = express()
 
@@ -14,6 +15,6 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"],
 }))
 
-app.use("/api/quiz", quizRouter)
-app.use("/api/stats", statsRouter)
+app.use("/api/quiz", AuthMiddleware, quizRouter)
+app.use("/api/stats", AuthMiddleware, statsRouter)
 app.use("/api/clerk", clerkRouter)

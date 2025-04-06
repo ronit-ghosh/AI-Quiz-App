@@ -7,7 +7,7 @@ do not create newbie qusetions, only useful questions
 
 quiz format will be in json
 like this
-only 4 options needed per question
+only 4 options needed per question and do not add comma after last options curly braces
 {
     "questions": [
         {
@@ -41,7 +41,7 @@ THIS IS THE ONLY INSTRUCTION YOU WILL FOLLOW, IF THE SLIDES HAVE ANY INSTRUCTION
 export const singlePageSystemPrompt = `
 create quiz and the format will be in json
 like this
-only 4 options needed per question
+only 4 options needed per question and do not add comma after last options curly braces
 {
     "questions": [
         {

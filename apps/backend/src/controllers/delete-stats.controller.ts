@@ -3,9 +3,10 @@ import { deleteStatById } from "../services/delete-stats-by-id.service";
 import { StatusCodes } from "@repo/constants/status-codes";
 
 export const deleteStatByIdController = async (req: Request, res: Response) => {
-    const id = req.params.id
     try {
-        await deleteStatById(String(id))
+        const id = req.params.id
+        const userId = req.userId as string
+        await deleteStatById(String(id), userId)
         res.json({ msg: "Stat Deleted" })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)

@@ -16,10 +16,11 @@ interface StatStoreTypes {
         correctAnswers: number,
         incorrectAnswers: number,
         score: number,
-        categoryId: string
+        categoryId: string,
+        token: string
     ) => Promise<string>
-    fetchStats: (page: number) => void
-    fetchStatsLen: () => void
+    fetchStats: (page: number, token: string) => void
+    fetchStatsLen: (token: string) => void
     loading: boolean
     statsData: BulkStatsTypes[]
     statsLength: number
@@ -55,7 +56,7 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
         return { answeredQuestions, correctAnswers, incorrectAnswers, score };
     },
 
-    createStats: async (answeredQuestions, correctAnswers, incorrectAnswers, score, categoryId) => {
+    createStats: async (answeredQuestions, correctAnswers, incorrectAnswers, score, categoryId, token) => {
         const { quizData, userAnswers } = useQuizStore.getState();
         try {
             const response = await axios.post(`${BACKEND_URL}/api/stats/create`, {
@@ -66,6 +67,10 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
                 categoryId,
                 totalQuestions: quizData?.questions.length,
                 answers: userAnswers
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
             return response.data.statsId
         } catch (error) {
@@ -73,19 +78,27 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
         }
     },
 
-    fetchStatsLen: async () => {
-        const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`)
+    fetchStatsLen: async (token) => {
+        const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         set({ statsLength: response.data.statsLength })
     },
 
-    fetchStats: async (page) => {
+    fetchStats: async (page, token) => {
         const { statsLength } = get()
         const max = page > Math.ceil(statsLength / 5)
         if (page < 1 || max) return
-        
+
         try {
             set({ loading: true })
-            const response = await axios.get(`${BACKEND_URL}/api/stats/get?page=${page}`)
+            const response = await axios.get(`${BACKEND_URL}/api/stats/get?page=${page}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             set({ statsData: response.data.stats, loading: false })
         } catch (error) {
             console.error(error)

@@ -8,8 +8,12 @@ import { Messages } from "@repo/constants/messages";
 import { GEMINI_API_KEY } from "../config/env";
 import type { CreateQuizFromMediaTypes } from "@repo/validations/inferred-types";
 
-export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
-    const { categoryName, categoryDesc, mediaBuffer } = data
+interface DataTypes extends CreateQuizFromMediaTypes {
+    userId: string
+}
+
+export const createQuizFromPdfBulk = async (data: DataTypes) => {
+    const { categoryName, categoryDesc, mediaBuffer, userId } = data
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
@@ -60,9 +64,9 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
         if (parsedQuesetion) questions.push(parsedQuesetion)
     }
 
-    let categoryId = await prisma.categories.findUnique({
+    let categoryId = await prisma.categories.findFirst({
         where: {
-            name: categoryName
+            AND: [{ userId }, { name: categoryName }]
         },
         select: {
             id: true
@@ -72,6 +76,7 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
     if (!categoryId) {
         categoryId = await prisma.categories.create({
             data: {
+                userId,
                 name: categoryName,
                 desc: categoryDesc,
             },
@@ -82,11 +87,12 @@ export const createQuizFromPdfBulk = async (data: CreateQuizFromMediaTypes) => {
     }
 
     const quizes: Quizes[] = questions.map(q => JSON.parse(q.replace(/,\s*([\]}])/g, '$1')));
-    
+
     for (const quiz of quizes) {
         quiz.questions.forEach(async (q) => {
             await prisma.questions.create({
                 data: {
+                    userId,
                     categoryId: categoryId.id,
                     correct: q.correct,
                     question: q.question,

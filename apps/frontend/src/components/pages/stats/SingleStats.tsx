@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { BACKEND_URL } from "@/lib/env";
 import { toast } from "sonner";
+import { useAuth } from "@clerk/nextjs";
 
 export default function SingleStats(props: {
   id?: string
@@ -29,10 +30,16 @@ export default function SingleStats(props: {
     isReviewPage
   } = props
   const router = useRouter()
+  const { getToken } = useAuth()
 
   async function handleDeleteStat() {
     try {
-      await axios.delete(`${BACKEND_URL}/api/stats/delete/${id}`)
+      const token = await getToken()
+      await axios.delete(`${BACKEND_URL}/api/stats/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       toast("Stat deleted")
     } catch (error) {
       console.error(error)

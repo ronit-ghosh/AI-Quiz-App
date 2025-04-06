@@ -1,10 +1,10 @@
 import { Messages } from "@repo/constants/messages"
 import { prisma } from "@repo/db/client"
 
-export const getStatsById = async (id: string) => {
+export const getStatsById = async (id: string, userId: string) => {
     const stats = await prisma.stats.findFirst({
         where: {
-            id
+            AND: [{ id }, { userId }]
         },
         select: {
             answeredQuestions: true,

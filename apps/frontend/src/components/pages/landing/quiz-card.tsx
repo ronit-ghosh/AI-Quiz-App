@@ -8,14 +8,21 @@ import { Trash2 } from "lucide-react"
 import axios from "axios"
 import { BACKEND_URL } from "@/lib/env"
 import { toast } from "sonner"
+import { useAuth } from "@clerk/nextjs"
 
 export default function QuizCard({ name, length, created, desc, id }: QuizCardProps) {
   const router = useRouter()
+  const { getToken } = useAuth()
   const formattedTime = formatDistanceToNow(new Date(created), { addSuffix: true })
 
   async function deleteQuiz() {
+    const token = await getToken()
     try {
-      await axios.delete(`${BACKEND_URL}/api/quiz/delete/${id}`)
+      await axios.delete(`${BACKEND_URL}/api/quiz/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       toast(`${name} Quiz Deleted`)
     } catch (error) {
       toast("Error occured, please try again!")
