@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import StatCard from './landing-stat-card'
 import { CheckCircle, ClipboardList, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 import axios from 'axios'
 import { BACKEND_URL } from '@/lib/env'
 import { useRouter } from 'next/navigation'
@@ -17,41 +16,41 @@ export default function Stats() {
     const [statsLen, setStatsLen] = useState(0)
     const router = useRouter()
 
-    const fetchQuizLen = async () => {
-        const token = await getToken()
-        const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        setQuizLen(response.data.quizLength)
-    }
-
-    const fetchAvgScore = async () => {
-        const token = await getToken()
-        const response = await axios.get(`${BACKEND_URL}/api/stats/get/average`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        setAvgScore(response.data.average)
-    }
-
-    const fetchStatsLen = async () => {
-        const token = await getToken()
-        const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        setStatsLen(response.data.statsLength)
-    }
+    useEffect(() => {
+        (async function fetchQuizLen() {
+            const token = await getToken()
+            const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setQuizLen(response.data.quizLength)
+        })()
+    }, [getToken])
 
     useEffect(() => {
-        fetchQuizLen()
-        fetchAvgScore()
-        fetchStatsLen()
-    }, [])
+        (async function fetchAvgScore() {
+            const token = await getToken()
+            const response = await axios.get(`${BACKEND_URL}/api/stats/get/average`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setAvgScore(response.data.average)
+        })()
+    }, [getToken])
+
+    useEffect(() => {
+        (async function fetchStatsLen() {
+            const token = await getToken()
+            const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setStatsLen(response.data.statsLength)
+        })()
+    }, [getToken])
 
     return (
         <>
@@ -60,7 +59,7 @@ export default function Stats() {
                 {
                     !avgScore || !quizLen || !statsLen ?
                         <div className="text-xl text-center underline">
-                            You haven't participated in any quiz yet
+                            You haven&apos;t participated in any quiz yet
                         </div> :
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <StatCard

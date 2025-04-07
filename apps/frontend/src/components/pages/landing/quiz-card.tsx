@@ -26,6 +26,7 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
       toast(`${name} Quiz Deleted`)
     } catch (error) {
       toast("Error occured, please try again!")
+      console.error(error)
     }
   }
 

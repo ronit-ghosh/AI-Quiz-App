@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { ParamValue } from "next/dist/server/request/params"
 import { useQuizStore, useStatStore } from "@repo/store"
 import { useRouter } from "next/navigation"
-import QuizResults from "./quiz-results"
 import { toast } from "sonner"
 import { useAuth } from "@clerk/nextjs"
 
@@ -35,7 +34,7 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
       const token = await getToken()
       fetchQuizData(String(id), token!)
     })()
-  }, [id])
+  }, [fetchQuizData, id, getToken])
 
   if (!quizData) return <div />
 

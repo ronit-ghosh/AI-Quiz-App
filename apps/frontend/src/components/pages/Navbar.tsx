@@ -5,7 +5,7 @@ import { ThemeToggle } from '../ThemeToggle'
 import { Button } from '../ui/button'
 import { toast } from 'sonner'
 import { Github } from 'lucide-react'
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { SignedIn, UserButton } from '@clerk/nextjs'
 
 export default function Navbar() {
     return (

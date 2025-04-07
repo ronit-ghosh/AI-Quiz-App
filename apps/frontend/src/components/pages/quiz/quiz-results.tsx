@@ -39,7 +39,7 @@ export default function QuizResults({ id }: { id: ParamValue }) {
         console.error(error)
       }
     })()
-  }, [])
+  }, [getToken, id])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600"

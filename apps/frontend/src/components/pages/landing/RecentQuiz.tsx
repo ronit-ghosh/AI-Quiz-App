@@ -12,19 +12,20 @@ export default function RecentQuiz() {
     const { quizzes, fetchCategories, fetchQuizLen, quizzesLength, loading } = useQuizStore()
     const [page, setPage] = useState(1)
     const { getToken } = useAuth()
+
     useEffect(() => {
         (async function fetchData() {
             const token = await getToken()
             fetchQuizLen(token!)
         })()
-    }, [])
+    }, [fetchQuizLen, getToken])
 
     useEffect(() => {
         (async function fetchData() {
             const token = await getToken()
             fetchCategories(page, token!)
         })()
-    }, [page, quizzesLength])
+    }, [page, quizzesLength, getToken, fetchCategories])
 
     async function fetchData() {
         const token = await getToken()
@@ -46,7 +47,7 @@ export default function RecentQuiz() {
             {
                 quizzesLength === 0 ?
                     <div className="text-xl text-center my-10 underline">
-                        You haven't created any quizzes yet
+                        You haven&apos;t created any quizzes yet
                     </div> :
                     <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
 

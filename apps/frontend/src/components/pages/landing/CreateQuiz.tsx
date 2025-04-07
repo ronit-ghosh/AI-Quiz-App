@@ -8,10 +8,18 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import QuizOption from './quiz-option'
 import { useAuth } from '@clerk/nextjs'
+import { useQuizStore } from '@repo/store'
 
 export default function CreateQuiz() {
     const { getToken } = useAuth()
     const [loading, setLoading] = useState(false)
+
+    const { fetchCategories, currentCategoryPage } = useQuizStore()
+
+    async function fetchCategory() {
+        const token = await getToken()
+        fetchCategories(currentCategoryPage, token!)
+    }
 
     async function handleGeneration(
         title: string,
@@ -28,7 +36,7 @@ export default function CreateQuiz() {
             }
             try {
                 setLoading(true)
-                const response = await axios.post(`${BACKEND_URL}/api/quiz/create/text`, {
+                await axios.post(`${BACKEND_URL}/api/quiz/create/text`, {
                     categoryName,
                     categoryDesc,
                     text: prompt
@@ -37,7 +45,8 @@ export default function CreateQuiz() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                toast(response.data.categoryId)
+                toast("Quiz Created")
+                fetchCategory()
                 setLoading(false)
             } catch (error) {
                 toast("Error while creating quiz!")
@@ -53,7 +62,7 @@ export default function CreateQuiz() {
             pdfToText(file!)
                 .then(async (text) => {
                     setLoading(true)
-                    const response = await axios.post(`${BACKEND_URL}/api/quiz/create/pdf`, {
+                    await axios.post(`${BACKEND_URL}/api/quiz/create/pdf`, {
                         categoryName,
                         categoryDesc,
                         text
@@ -62,7 +71,8 @@ export default function CreateQuiz() {
                             Authorization: `Bearer ${token}`
                         }
                     })
-                    toast(response.data.categoryId)
+                    toast("Quiz Created")
+                    fetchCategory()
                     setLoading(false)
                 })
                 .catch((error) => {
@@ -83,13 +93,14 @@ export default function CreateQuiz() {
                 formData.append("pdf", file)
 
                 formData.forEach(d => console.log(d))
-                const response = await axios.post(`${BACKEND_URL}/api/quiz/create/pdf/bulk`, formData, {
+                await axios.post(`${BACKEND_URL}/api/quiz/create/pdf/bulk`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     }
                 })
-                toast(response.data.categoryId)
+                toast("Quiz Created")
+                fetchCategory()
                 setLoading(false)
             } catch (error) {
                 toast("Error while creating quiz!")
@@ -109,13 +120,14 @@ export default function CreateQuiz() {
                 formData.append("categoryDesc", categoryDesc)
                 formData.append("image", file)
 
-                const response = await axios.post(`${BACKEND_URL}/api/quiz/create/image`, formData, {
+                await axios.post(`${BACKEND_URL}/api/quiz/create/image`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${token}`
                     }
                 })
-                toast(response.data.categoryId)
+                toast("Quiz Created")
+                fetchCategory()
                 setLoading(false)
             } catch (error) {
                 toast((error as Error).message)

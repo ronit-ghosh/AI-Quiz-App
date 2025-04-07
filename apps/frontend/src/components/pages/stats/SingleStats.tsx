@@ -16,7 +16,7 @@ export default function SingleStats(props: {
   totalQuestions: number
   time: string
   name: string
-  isReviewPage?: Boolean
+  isReviewPage?: boolean
 }) {
   const {
     id,

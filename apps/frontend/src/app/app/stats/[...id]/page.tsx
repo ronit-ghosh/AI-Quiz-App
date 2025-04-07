@@ -8,7 +8,7 @@ import axios from "axios"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function page() {
+export default function Page() {
     const { getToken } = useAuth()
     const { id } = useParams()
     const [data, setData] = useState<StatTypes | null>(null)
@@ -23,7 +23,7 @@ export default function page() {
             })
             setData(response.data.stats)
         })()
-    }, [id])
+    }, [getToken, id])
 
     return (
         <div>

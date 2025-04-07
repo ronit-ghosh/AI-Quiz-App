@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Brain, FileText, Image, Upload } from "lucide-react";
 import Link from "next/link";
 

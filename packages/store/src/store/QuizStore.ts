@@ -28,6 +28,7 @@ interface QuizStoreTypes {
     loading: boolean
     quizzes: QuizzesTypes[]
     quizzesLength: number
+    currentCategoryPage: number
 }
 
 const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
@@ -42,6 +43,7 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
     loading: false,
     quizzesLength: 0,
     quizzes: [],
+    currentCategoryPage: 0,
 
     fetchQuizData: async (id, token) => {
         try {
@@ -150,7 +152,8 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
             console.log(response.data.categories)
             set({
                 quizzes: response.data.categories,
-                loading: false
+                loading: false,
+                currentCategoryPage: page
             })
         } catch (error) {
             console.error(error)

@@ -24,7 +24,7 @@ export default function StatsPage() {
       const token = await getToken()
       fetchStatsLen(token!)
     })()
-  }, [])
+  }, [getToken, fetchStatsLen])
 
   useEffect(() => {
     if (statsLength === 0) return;
@@ -32,7 +32,7 @@ export default function StatsPage() {
       const token = await getToken()
       fetchStats(page, token!)
     })()
-  }, [page, statsLength])
+  }, [page, statsLength, getToken, fetchStats])
 
   if (statsData.length == 0) return (
     <div className="grid place-items-center h-[80vh] text-xl">
