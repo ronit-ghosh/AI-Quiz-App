@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run src/server.ts",
+    "build": "bun build src/server.ts --outdir dist",
+    "start": "bun dist/server.js",
     "dev": "bun --watch src/server.ts"
   },
   "devDependencies": {
