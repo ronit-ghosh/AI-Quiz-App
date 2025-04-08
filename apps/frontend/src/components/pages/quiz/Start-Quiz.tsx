@@ -157,8 +157,9 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    handleSkip()
-                    if (currentQuestionIndex === quizData.questions.length - 1) {
+                    const isLastQuestion = currentQuestionIndex === quizData.questions.length - 1
+                    handleNext()
+                    if (isLastQuestion) {
                       createStatsAsync()
                     }
                   }}
@@ -167,8 +168,9 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
                 </Button>
                 <Button
                   onClick={() => {
-                    handleNext()
-                    if (currentQuestionIndex === quizData.questions.length - 1) {
+                    const isLastQuestion = currentQuestionIndex === quizData.questions.length - 1
+                    handleSkip()
+                    if (isLastQuestion) {
                       createStatsAsync()
                     }
                   }}

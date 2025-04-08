@@ -14,7 +14,7 @@ export default function page() {
       <main className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center justify-center text-center space-y-8">
           <div className="space-y-4">
-            <h1 className="text-4xl sm:text-6xl font-bold tracking-tighter bg-gradient-to-bl from-blue-500 to-blue-700 bg-clip-text text-transparent">
+            <h1 className="text-6xl font-bold tracking-tighter bg-gradient-to-bl from-blue-500 to-blue-700 bg-clip-text text-transparent">
               Quiz AI
             </h1>
             <p className="text-xl text-muted-foreground max-w-[600px] mx-auto">

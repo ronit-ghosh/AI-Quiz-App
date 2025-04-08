@@ -8,7 +8,10 @@ export default function Providers({ children }: {
     children: React.ReactNode
 }) {
     return (
-        <ClerkProvider>
+        <ClerkProvider
+            signInFallbackRedirectUrl="/"
+            signUpFallbackRedirectUrl="/"
+        >
             <ThemeProvider
                 attribute="class"
                 defaultTheme="light"

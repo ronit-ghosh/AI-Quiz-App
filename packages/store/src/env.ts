@@ -1,1 +1,1 @@
-export const BACKEND_URL = process.env.BACKEND_URL || "api.quiz.ronitghosh.site"
+export const BACKEND_URL = "http://localhost:8000"
