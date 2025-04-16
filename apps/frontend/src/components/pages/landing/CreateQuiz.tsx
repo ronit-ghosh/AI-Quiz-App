@@ -5,7 +5,7 @@ import { FileImage, FileText, FileType } from 'lucide-react'
 import { BACKEND_URL } from '@/lib/env'
 import pdfToText from "react-pdftotext"
 import { toast } from 'sonner'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import QuizOption from './quiz-option'
 import { useAuth } from '@clerk/nextjs'
 import { useQuizStore } from '@repo/store'
@@ -18,10 +18,10 @@ export default function CreateQuiz() {
     console.log(status)
     const { fetchCategories, currentCategoryPage } = useQuizStore()
 
-    async function fetchCategory() {
+    const fetchCategory = useCallback(async () => {
         const token = await getToken()
         fetchCategories(currentCategoryPage, token!)
-    }
+    }, [currentCategoryPage, fetchCategories, getToken])
 
     useEffect(() => {
         if (!jobId || status === "FAILED") {
@@ -55,7 +55,7 @@ export default function CreateQuiz() {
 
         return () => clearTimeout(interval)
 
-    }, [jobId, status, getToken])
+    }, [jobId, status, getToken, fetchCategory])
 
     async function handleGeneration(
         title: string,

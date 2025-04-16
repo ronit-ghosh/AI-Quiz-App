@@ -9,7 +9,7 @@ import axios from "axios"
 import { BACKEND_URL } from "@/lib/env"
 import { toast } from "sonner"
 import { useAuth } from "@clerk/nextjs"
-import { Dialog, DialogTitle, DialogTrigger, DialogContent, DialogDescription, DialogHeader, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import { Dialog, DialogTitle, DialogTrigger, DialogContent, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"
 import { useQuizStore } from "@repo/store"
 import { useState } from "react"
 
@@ -56,7 +56,7 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
             <DialogHeader>
               <DialogTitle>Delete Quiz</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{name}"? This action cannot be undone.
+                Are you sure you want to delete {name}? This action cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex justify-end gap-2 sm:justify-end">

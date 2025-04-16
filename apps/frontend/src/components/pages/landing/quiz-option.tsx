@@ -35,7 +35,6 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
       file,
       prompt
     )
-    !loading && setUploaded(false)
   }
 
   function handleFileChange() {
@@ -141,14 +140,24 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
                         >
                           Browse Files
                         </Button> :
-                        <Button
-                          disabled
-                          variant="outline"
-                          size="sm"
-                          className="mt-2"
-                        >
-                          Uploaded
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            disabled
+                            variant="outline"
+                            size="sm"
+                            className="mt-2"
+                          >
+                            Uploaded
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mt-2"
+                            onClick={() => setUploaded(false)}
+                          >
+                            Clear
+                          </Button>
+                        </div>
                     }
                     {/* <Button onClick={() => setUploaded(false)}></Button> */}
                   </div> :
