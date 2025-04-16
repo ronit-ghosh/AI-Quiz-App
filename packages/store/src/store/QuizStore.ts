@@ -138,7 +138,6 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
 
     fetchCategories: async (page, token) => {
         const { quizzesLength } = get()
-        console.log(quizzesLength)
         const max = page > Math.ceil(quizzesLength / 6)
         if (page < 1 || max) return
 
@@ -149,7 +148,6 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(response.data.categories)
             set({
                 quizzes: response.data.categories,
                 loading: false,

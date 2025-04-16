@@ -5,7 +5,7 @@ import { FileImage, FileText, FileType } from 'lucide-react'
 import { BACKEND_URL } from '@/lib/env'
 import pdfToText from "react-pdftotext"
 import { toast } from 'sonner'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import QuizOption from './quiz-option'
 import { useAuth } from '@clerk/nextjs'
 import { useQuizStore } from '@repo/store'
@@ -13,13 +13,49 @@ import { useQuizStore } from '@repo/store'
 export default function CreateQuiz() {
     const { getToken } = useAuth()
     const [loading, setLoading] = useState(false)
-
+    const [jobId, setJobId] = useState("")
+    const [status, setStatus] = useState<"GENERATED" | "FAILED" | "PENDING">()
+    console.log(status)
     const { fetchCategories, currentCategoryPage } = useQuizStore()
 
     async function fetchCategory() {
         const token = await getToken()
         fetchCategories(currentCategoryPage, token!)
     }
+
+    useEffect(() => {
+        if (!jobId || status === "FAILED") {
+            toast.dismiss()
+            return
+        }
+
+        if (status === "GENERATED") {
+            toast.dismiss()
+            fetchCategory()
+            return
+        }
+
+        const PollForStatus = async () => {
+            try {
+                const token = await getToken()
+                const response = await axios.get(`${BACKEND_URL}/api/quiz/get/status/${jobId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                // setStatus("PENDING")
+                setStatus(response.data.status)
+            } catch (error) {
+                setStatus("FAILED")
+                console.error(error)
+            }
+        }
+
+        const interval = setInterval(PollForStatus, 10000)
+
+        return () => clearTimeout(interval)
+
+    }, [jobId, status, getToken])
 
     async function handleGeneration(
         title: string,
@@ -92,15 +128,15 @@ export default function CreateQuiz() {
                 formData.append("categoryDesc", categoryDesc)
                 formData.append("pdf", file)
 
-                formData.forEach(d => console.log(d))
-                await axios.post(`${BACKEND_URL}/api/quiz/create/pdf/bulk`, formData, {
+                const response = await axios.post(`${BACKEND_URL}/api/quiz/create/pdf/bulk`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     }
                 })
-                toast("Quiz Created")
-                fetchCategory()
+                setJobId(response.data.jobId)
+                toast.loading("Generating quizzes...")
+
                 setLoading(false)
             } catch (error) {
                 toast("Error while creating quiz!")
@@ -141,6 +177,17 @@ export default function CreateQuiz() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {/* <div className={`w-89 h-16 fixed right-5 bottom-5 rounded-lg flex items-center gap-1 px-5 font-bold bg-primary text-secondary 
+                ${status === "PENDING" ? "block" : "hidden"}`}>
+                <span>
+                    Generating quizzes
+                </span>
+                <div className="flex flex-row gap-1 mt-2">
+                    <div className="w-1 h-1 rounded-full bg-secondary animate-bounce"></div>
+                    <div className="w-1 h-1 rounded-full bg-secondary animate-bounce [animation-delay:-.3s]"></div>
+                    <div className="w-1 h-1 rounded-full bg-secondary animate-bounce [animation-delay:-.5s]"></div>
+                </div>
+            </div> */}
             <QuizOption
                 icon={<FileText className="h-6 w-6 text-blue-600" />}
                 title="Text to Quiz"

@@ -8,6 +8,7 @@ do not create newbie qusetions, only useful questions
 quiz format will be in json
 like this
 only 4 options needed per question and do not add comma after last options curly braces
+Return output as strict JSON inside triple backticks without extra formatting or escape characters.
 {
     "questions": [
         {
@@ -42,6 +43,7 @@ export const singlePageSystemPrompt = `
 create quiz and the format will be in json
 like this
 only 4 options needed per question and do not add comma after last options curly braces
+Return output as strict JSON inside triple backticks without extra formatting or escape characters.
 {
     "questions": [
         {

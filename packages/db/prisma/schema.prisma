@@ -73,6 +73,21 @@ model Answers {
   updatedAt  DateTime @updatedAt
 }
 
+model ProcessingStatus {
+  id         String   @id @default(uuid())
+  userId     String
+  categoryId String
+  status     Status
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Status {
+  PENDING
+  GENERATED
+  FAILED
+}
+
 enum Option {
   A
   B

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import {
+    checkStatusController,
     createFromImageController,
     createFromPdfBulkController,
     createFromPdfController,
@@ -27,4 +28,5 @@ router.post("/create/text", createFromTextController)
 router.get("/get/category", getCategoriesBulkController)
 router.get("/get/length", getQuizzesLengthController)
 router.get("/get/:id", getQuizesByIdController)
+router.get("/get/status/:id", checkStatusController)
 router.delete("/delete/:id", deleteQuizByIdController)

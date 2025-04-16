@@ -25,7 +25,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
   const [categoryName, setCategoryName] = useState<string>("")
   const [categoryDesc, setCategoryDesc] = useState<string>("")
   const [prompt, setPrompt] = useState<string>("")
-  const [file, setFile] = useState<File>()
+  const [file, setFile] = useState<File | undefined>(undefined)
   const [uploaded, setUploaded] = useState(false)
 
   const onSubmit = () => {
@@ -35,6 +35,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
       file,
       prompt
     )
+    !loading && setUploaded(false)
   }
 
   function handleFileChange() {
@@ -149,6 +150,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
                           Uploaded
                         </Button>
                     }
+                    {/* <Button onClick={() => setUploaded(false)}></Button> */}
                   </div> :
                   <Textarea
                     onChange={e => setPrompt(e.target.value)}

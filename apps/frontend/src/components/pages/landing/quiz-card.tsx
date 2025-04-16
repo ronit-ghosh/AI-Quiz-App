@@ -9,11 +9,21 @@ import axios from "axios"
 import { BACKEND_URL } from "@/lib/env"
 import { toast } from "sonner"
 import { useAuth } from "@clerk/nextjs"
+import { Dialog, DialogTitle, DialogTrigger, DialogContent, DialogDescription, DialogHeader, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import { useQuizStore } from "@repo/store"
+import { useState } from "react"
 
 export default function QuizCard({ name, length, created, desc, id }: QuizCardProps) {
   const router = useRouter()
   const { getToken } = useAuth()
   const formattedTime = formatDistanceToNow(new Date(created), { addSuffix: true })
+  const [open, setOpen] = useState(false)
+  const { fetchCategories, currentCategoryPage } = useQuizStore()
+
+  async function fetchCategory() {
+    const token = await getToken()
+    fetchCategories(currentCategoryPage, token!)
+  }
 
   async function deleteQuiz() {
     const token = await getToken()
@@ -24,6 +34,8 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
         }
       })
       toast(`${name} Quiz Deleted`)
+      fetchCategory()
+      setOpen(false)
     } catch (error) {
       toast("Error occured, please try again!")
       console.error(error)
@@ -34,10 +46,32 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
     <div className="group bg-card rounded-lg shadow-sm p-6">
       <div className="flex justify-between">
         <h3 className="font-semibold text-lg mb-2">{name}</h3>
-        <Trash2
-          onClick={deleteQuiz}
-          size={17}
-          className="text-red-400 cursor-pointer group-hover:block hidden transition-all" />
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Trash2
+              size={17}
+              className="text-red-400 cursor-pointer group-hover:block hidden transition-all" />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Quiz</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete "{name}"? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex justify-end gap-2 sm:justify-end">
+              <DialogTrigger asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogTrigger>
+              <Button
+                variant="destructive"
+                onClick={deleteQuiz}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm text-primary/60">{length} questions</span>

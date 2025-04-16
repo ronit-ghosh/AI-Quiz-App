@@ -3,7 +3,7 @@ import { StatusCodes } from "@repo/constants/status-codes"
 import { createQuizFromMediaValidation, createQuizFromTextValidation } from "@repo/validations/types";
 import type { Request, Response } from "express";
 import { createQuizFromPdf } from "../services/create-quiz-from-pdf.service";
-import { createQuizFromPdfBulk } from "../services/create-quiz-from-pdf-bulk.service";
+import { checkStatus, createJob, createQuizFromPdfBulk } from "../services/create-quiz-from-pdf-bulk.service";
 import { createQuizFromText } from "../services/create-quiz-from-text.service";
 import { createQuizFromImage } from "../services/create-quiz-from-image.service";
 
@@ -49,13 +49,42 @@ export const createFromPdfBulkController = async (req: Request, res: Response) =
             return
         }
 
-        const categoryId = await createQuizFromPdfBulk({ categoryName, categoryDesc, mediaBuffer, userId })
+        const { jobId, categoryId } = await createJob({ categoryName, categoryDesc, userId, mediaBuffer })
+
+        createQuizFromPdfBulk({ categoryName, categoryDesc, mediaBuffer, userId, categoryId, jobId })
 
         res.status(StatusCodes.OK)
-            .json({ msg: Messages.SUCCESS.QUIZ_CREATED, categoryId })
+            .json({ msg: Messages.SUCCESS.JOB_STARTED, jobId })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ msg: (error as Error).message })
+        console.error(error)
+    }
+}
+
+export const checkStatusController = async (req: Request, res: Response) => {
+    try {
+        const jobId = req.params.id as string
+
+        const status = await checkStatus(jobId)
+
+        if (status === "FAILED") {
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+                .json({ msg: Messages.ERROR.QUIZ_NOT_GENERATED, status })
+            return
+        }
+
+        if (status === "PENDING") {
+            res.status(StatusCodes.OK)
+                .json({ status })
+            return
+        }
+
+        res.status(StatusCodes.OK)
+            .json({ msg: Messages.SUCCESS.QUIZ_CREATED, status })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ msg: Messages.ERROR.RESPONSE_NOT_GENERATED })
         console.error(error)
     }
 }

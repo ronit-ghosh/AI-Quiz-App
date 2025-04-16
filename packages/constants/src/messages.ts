@@ -3,7 +3,8 @@ export const Messages = {
     USER_CREATED: 'User created successfully',
     QUIZ_CREATED: "Quiz created successfully",
     LOGIN_SUCCESS: 'Login successful',
-    STATS_CREATED: "Stats created successfully"
+    STATS_CREATED: "Stats created successfully",
+    JOB_STARTED: "Quiz creation started"
   },
   ERROR: {
     USER_NOT_FOUND: 'User not found!',
@@ -20,6 +21,7 @@ export const Messages = {
     CATEGORY_NOT_FOUND: "No category found!",
     STATS_NOT_CREATED: "Stats not created!",
     STATS_NOT_FOUND: "Stats not found!",
-    PARAMS_NOT_FOUND: "Params not found!"
+    PARAMS_NOT_FOUND: "Params not found!",
+    STATUS_FETCHING_FAILED: "Error while fetching job status!"
   }
 };
