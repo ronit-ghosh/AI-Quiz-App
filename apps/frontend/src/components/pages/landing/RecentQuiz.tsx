@@ -45,7 +45,7 @@ export default function RecentQuiz() {
                 </div>
             </div>
             {
-                quizzesLength === 0 ?
+                quizzes.length === 0 ?
                     <div className="text-xl text-center my-10 underline">
                         You haven&apos;t created any quizzes yet
                     </div> :
