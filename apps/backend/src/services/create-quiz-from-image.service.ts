@@ -59,7 +59,7 @@ export const createQuizFromImage = async (data: DataTypes) => {
     if (!result.response.candidates) throw new Error(Messages.ERROR.RESPONSE_NOT_GENERATED)
 
     const actualQuestions = result.response.candidates[0]?.content.parts[0]?.text
-    const parsedQuestions = JSON.parse(actualQuestions?.replace(/^```json\s*|\s*```$/g, '').replace(/,\s*([\]}])/g, '$1')!)
+     const parsedQuestions = JSON.parse(actualQuestions?.replace(/^```json\s*|\s*```$/g, '').replace(/,\s*([\]}])/g, '$1')!)
     const quizes: Questions[] = parsedQuestions?.questions
 
     let categoryId = await prisma.categories.findFirst({
