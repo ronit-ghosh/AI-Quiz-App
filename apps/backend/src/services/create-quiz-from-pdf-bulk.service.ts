@@ -109,13 +109,10 @@ export const createQuizFromPdfBulk = async (data: DataTypes) => {
             const repairedJson = jsonrepair(parsedQuesetion!)
  
             if (repairedJson) questions.push(repairedJson)
-            console.log("👀👀👀👀👀👀👀👀👀👀👀",actualQuestion)
-            console.log("👀👀👀👀👀👀👀👀👀👀👀",parsedQuesetion)
-            console.log("👀👀👀👀👀👀👀👀👀👀👀",repairedJson)
         }
 
         const quizes: Quizes[] = questions.map(q => JSON.parse(q.replace(/,\s*([\]}])/g, '$1')));
-        console.log("👀👀👀👀👀👀👀👀👀👀👀",quizes)
+        
         for (const quiz of quizes) {
             quiz.questions.forEach(async (q) => {
                 await prisma.questions.create({
