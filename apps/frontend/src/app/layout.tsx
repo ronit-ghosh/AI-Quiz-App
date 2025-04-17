@@ -24,6 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <link rel="shortcut icon" href="https://res.cloudinary.com/drynqkitl/image/upload/v1744891521/quizai_c8h7ss.png" type="image/x-icon" />
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           {children}
