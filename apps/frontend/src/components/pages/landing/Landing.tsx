@@ -2,7 +2,6 @@ import CreateQuizModal from "./create-quiz-modal"
 import CreateQuiz from "./CreateQuiz"
 import RecentQuiz from "./RecentQuiz"
 import Stats from "./Stats"
-import CreateQuizTips from "./CreateQuizTips"
 
 export default function Landing() {
   return (

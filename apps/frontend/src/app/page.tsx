@@ -36,7 +36,7 @@ const CardItem = [{
   Icon: Image
 },]
 
-export default function page() {
+export default function Page() {
   const plugin = useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   )
@@ -91,7 +91,7 @@ function LandingCard(props: {
   title: string,
   desc: string,
   btnText: string,
-  Icon: React.Component | any
+  Icon: React.FC<React.SVGProps<SVGSVGElement>>
 }) {
   const { title, desc, btnText, Icon } = props
   return (

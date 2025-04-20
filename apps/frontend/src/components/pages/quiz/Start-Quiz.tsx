@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CheckCircle, Clock, XCircle } from "lucide-react"
+import { CheckCircle, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ParamValue } from "next/dist/server/request/params"
 import { useQuizStore, useStatStore } from "@repo/store"
