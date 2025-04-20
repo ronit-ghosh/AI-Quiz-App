@@ -86,10 +86,10 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
               <p className="text-primary/60">{quizData.desc}</p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 dark:bg-blue-900/40 dark:text-blue-100 bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+              {/* <div className="flex items-center gap-1 dark:bg-blue-900/40 dark:text-blue-100 bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                 <Clock className="h-4 w-4" />
                 <span className="font-medium">{"600"}</span>
-              </div>
+              </div> */}
               <div className="text-gray-700 font-medium">
                 {currentQuestionIndex + 1}/{totalQuestions}
               </div>
