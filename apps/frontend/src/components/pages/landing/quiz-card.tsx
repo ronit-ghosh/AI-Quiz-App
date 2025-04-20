@@ -43,7 +43,7 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
   }
 
   return (
-    <div className="group bg-card rounded-lg shadow-sm p-6">
+    <div className="group bg-card rounded-lg shadow-sm p-6 bg-gradient-to-b border dark:border-neutral-900 border-neutral-50 dark:from-neutral-900 dark:to-neutral-950 from-neutral-50 to-neutral-100">
       <div className="flex justify-between">
         <h3 className="font-semibold text-lg mb-2">{name}</h3>
         <Dialog open={open} onOpenChange={setOpen}>

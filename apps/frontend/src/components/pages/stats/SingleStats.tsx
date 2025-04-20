@@ -48,8 +48,8 @@ export default function SingleStats(props: {
   }
 
   return (
-    <div className="max-w-6xl w-full mx-auto">
-      <div className="group bg-card backdrop-blur-lg rounded-2xl p-6 border border-secondary-700/50">
+    <div className="max-w-6xl w-full mx-auto ">
+      <div className="group rounded-2xl p-6 bg-gradient-to-b border dark:border-neutral-900 border-neutral-50 dark:from-neutral-900 dark:to-neutral-950 from-neutral-50 to-neutral-100">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex gap-2 items-center">
             <span className="text-lg font-bold uppercase">

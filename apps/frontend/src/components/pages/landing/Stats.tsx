@@ -55,7 +55,7 @@ export default function Stats() {
     return (
         <>
             <h2 className="text-2xl font-bold text-center mb-8">Your Quiz Statistics</h2>
-            <div className="bg-card rounded-lg shadow-sm p-8 mb-12">
+            <div className="bg-card rounded-lg shadow-sm p-8 mb-12 border dark:border-neutral-900 border-neutral-50 bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 from-neutral-50 to-neutral-100">
                 {
                     !avgScore || !quizLen || !statsLen ?
                         <div className="text-xl text-center underline">

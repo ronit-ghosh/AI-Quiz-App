@@ -11,7 +11,6 @@ export default function Landing() {
         <CreateQuiz />
         <RecentQuiz />
         <Stats />
-        <CreateQuizTips />
       </div>
       <CreateQuizModal />
     </main>

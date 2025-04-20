@@ -77,7 +77,7 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <div className="bg-card rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-card rounded-lg shadow-sm overflow-hidden bg-gradient-to-b border dark:border-neutral-900 border-neutral-50 dark:from-neutral-900 dark:to-neutral-950 from-neutral-50 to-neutral-100">
 
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">

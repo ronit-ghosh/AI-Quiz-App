@@ -74,7 +74,7 @@ export default function QuizOption({ icon, title, description, isTextQuiz, handl
 
   return (
     <>
-      <div className="bg-card rounded-lg shadow-sm p-6 flex flex-col items-center">
+      <div className="bg-card rounded-lg shadow-sm p-6 flex flex-col items-center border dark:border-neutral-900 border-neutral-50 bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 from-neutral-50 to-neutral-100">
         <div className="w-12 h-12 rounded-full dark:bg-blue-900/20 bg-blue-100 flex items-center justify-center mb-4">{icon}</div>
         <h3 className="font-semibold text-lg mb-2">{title}</h3>
         <p className="text-primary/60 text-sm text-center mb-6">{description}</p>
