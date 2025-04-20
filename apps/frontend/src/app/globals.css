@@ -87,6 +87,7 @@
         350% 50%;
     }
   }
+  --font-poppins: var(--poppins)
   --breakpoint-xs: 365px;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

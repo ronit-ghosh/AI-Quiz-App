@@ -43,7 +43,7 @@ export default function page() {
 
   return (
     <AuroraBackground>
-      <div className="min-h-screen w-full relative overflow-clip">
+      <div className="min-h-screen w-full relative overflow-clip ">
         <Navbar isLanding />
         <main className="container mx-auto px-4 py-16">
           <div className="flex flex-col items-center justify-center text-center space-y-8">
