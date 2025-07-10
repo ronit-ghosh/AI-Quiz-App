@@ -8,6 +8,7 @@ import { useQuizStore, useStatStore } from "@repo/store"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useAuth } from "@clerk/nextjs"
+import { BACKEND_URL } from "@/lib/env"
 
 export default function StartQuiz({ id }: { id: ParamValue }) {
   const router = useRouter()
@@ -32,7 +33,7 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
   useEffect(() => {
     (async function fetchData() {
       const token = await getToken()
-      fetchQuizData(String(id), token!)
+      fetchQuizData(String(id), token!, BACKEND_URL)
     })()
   }, [fetchQuizData, id, getToken])
 
@@ -62,7 +63,8 @@ export default function StartQuiz({ id }: { id: ParamValue }) {
       incorrectAnswers,
       score,
       String(id),
-      token!
+      token!,
+      BACKEND_URL
     )
     setCreatingStat(false)
     if (statsId) {

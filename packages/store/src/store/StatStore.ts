@@ -1,7 +1,7 @@
 import { create, type StateCreator } from "zustand"
 import { useQuizStore } from "./QuizStore";
 import axios from "axios";
-import { BACKEND_URL } from "../env";
+// import { BACKEND_URL } from "../env";
 import type { BulkStatsTypes } from "../types";
 
 interface StatStoreTypes {
@@ -17,10 +17,11 @@ interface StatStoreTypes {
         incorrectAnswers: number,
         score: number,
         categoryId: string,
-        token: string
+        token: string,
+        BACKEND_URL: string
     ) => Promise<string>
-    fetchStats: (page: number, token: string) => void
-    fetchStatsLen: (token: string) => void
+    fetchStats: (page: number, token: string, BACKEND_URL: string) => void
+    fetchStatsLen: (token: string, BACKEND_URL: string) => void
     loading: boolean
     statsData: BulkStatsTypes[]
     statsLength: number
@@ -56,7 +57,8 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
         return { answeredQuestions, correctAnswers, incorrectAnswers, score };
     },
 
-    createStats: async (answeredQuestions, correctAnswers, incorrectAnswers, score, categoryId, token) => {
+    createStats: async (answeredQuestions, correctAnswers, incorrectAnswers, score, categoryId, token, BACKEND_URL) => {
+        if (!BACKEND_URL) return
         const { quizData, userAnswers } = useQuizStore.getState();
         try {
             const response = await axios.post(`${BACKEND_URL}/api/stats/create`, {
@@ -78,7 +80,8 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
         }
     },
 
-    fetchStatsLen: async (token) => {
+    fetchStatsLen: async (token, BACKEND_URL) => {
+        if (!BACKEND_URL) return
         const response = await axios.get(`${BACKEND_URL}/api/stats/get/length`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -87,7 +90,7 @@ const StatStore: StateCreator<StatStoreTypes> = (set, get) => ({
         set({ statsLength: response.data.statsLength })
     },
 
-    fetchStats: async (page, token) => {
+    fetchStats: async (page, token, BACKEND_URL) => {
         const { statsLength } = get()
         const max = page > Math.ceil(statsLength / 5)
         if (page < 1 || max) return

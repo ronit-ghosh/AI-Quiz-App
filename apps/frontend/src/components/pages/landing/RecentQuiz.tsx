@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { useQuizStore } from '@repo/store'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@clerk/nextjs'
+import { BACKEND_URL } from '@/lib/env'
 
 export default function RecentQuiz() {
     const { quizzes, fetchCategories, fetchQuizLen, quizzesLength, loading } = useQuizStore()
@@ -16,20 +17,20 @@ export default function RecentQuiz() {
     useEffect(() => {
         (async function fetchData() {
             const token = await getToken()
-            fetchQuizLen(token!)
+            fetchQuizLen(token!, BACKEND_URL)
         })()
     }, [fetchQuizLen, getToken])
 
     useEffect(() => {
         (async function fetchData() {
             const token = await getToken()
-            fetchCategories(page, token!)
+            fetchCategories(page, token!, BACKEND_URL)
         })()
     }, [page, quizzesLength, getToken, fetchCategories])
 
     async function fetchData() {
         const token = await getToken()
-        fetchCategories(page, token!)
+        fetchCategories(page, token!, BACKEND_URL)
     }
 
     return (

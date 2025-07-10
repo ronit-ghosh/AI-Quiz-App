@@ -15,12 +15,11 @@ export default function CreateQuiz() {
     const [loading, setLoading] = useState(false)
     const [jobId, setJobId] = useState("")
     const [status, setStatus] = useState<"GENERATED" | "FAILED" | "PENDING">()
-    console.log(status)
     const { fetchCategories, currentCategoryPage } = useQuizStore()
 
     const fetchCategory = useCallback(async () => {
         const token = await getToken()
-        fetchCategories(currentCategoryPage, token!)
+        fetchCategories(currentCategoryPage, token!, BACKEND_URL)
     }, [currentCategoryPage, fetchCategories, getToken])
 
     useEffect(() => {

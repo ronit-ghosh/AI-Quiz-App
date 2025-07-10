@@ -40,7 +40,6 @@ export default function Page() {
   const plugin = useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   )
-
   return (
     <AuroraBackground>
       <div className="min-h-screen w-full relative overflow-clip ">

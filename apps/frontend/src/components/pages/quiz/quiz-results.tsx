@@ -57,7 +57,7 @@ export default function QuizResults({ id }: { id: ParamValue }) {
   }
 
   if (!data) return
-  console.log(data)
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <div className="bg-card rounded-lg shadow-sm overflow-hidden">

@@ -1,7 +1,7 @@
 import { create, type StateCreator } from "zustand"
 import type { BulkStatsTypes, QuizData, QuizzesTypes } from "../types"
 import axios from "axios"
-import { BACKEND_URL } from "../env"
+// import { BACKEND_URL } from "../env"
 
 interface QuizStoreTypes {
     quizData: QuizData | null
@@ -10,7 +10,7 @@ interface QuizStoreTypes {
     selectedAnswer: string | null
     showExplanation: boolean
     statsData: BulkStatsTypes[]
-    fetchQuizData: (id: string, token: string) => void
+    fetchQuizData: (id: string, token: string, BACKEND_URL: string) => void
     handleNext: () => void
     handlePrev: () => void
     handleSkip: () => void
@@ -23,8 +23,8 @@ interface QuizStoreTypes {
         questionId: number,
         optionId: string | null
     }[]
-    fetchCategories: (page: number, token: string) => void
-    fetchQuizLen: (token: string) => void
+    fetchCategories: (page: number, token: string, BACKEND_URL: string) => void
+    fetchQuizLen: (token: string, BACKEND_URL: string) => void
     loading: boolean
     quizzes: QuizzesTypes[]
     quizzesLength: number
@@ -45,7 +45,8 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
     quizzes: [],
     currentCategoryPage: 0,
 
-    fetchQuizData: async (id, token) => {
+    fetchQuizData: async (id, token, BACKEND_URL) => {
+        if (!BACKEND_URL) return
         try {
             const response = await axios.get(`${BACKEND_URL}/api/quiz/get/${id}`, {
                 headers: {
@@ -123,7 +124,8 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
         return {}
     }),
 
-    fetchQuizLen: async (token) => {
+    fetchQuizLen: async (token, BACKEND_URL) => {
+        if (!BACKEND_URL) return
         try {
             const response = await axios.get(`${BACKEND_URL}/api/quiz/get/length`, {
                 headers: {
@@ -136,7 +138,8 @@ const QuizStore: StateCreator<QuizStoreTypes> = (set, get) => ({
         }
     },
 
-    fetchCategories: async (page, token) => {
+    fetchCategories: async (page, token, BACKEND_URL) => {
+        if (!BACKEND_URL) return
         const { quizzesLength } = get()
         const max = page > Math.ceil(quizzesLength / 6)
         if (page < 1 || max) return

@@ -2,13 +2,6 @@ FROM oven/bun:1
 
 WORKDIR /app
 
-ENV DATABASE_URL=${DATABASE_URL}
-ENV API_KEY=${API_KEY}
-ENV JWT_SECRET=${JWT_SECRET}
-ENV SIGNING_SECRET=${SIGNING_SECRET}
-ENV CLERK_ISSUER=${CLERK_ISSUER}
-
-COPY ./cmd ./cmd
 COPY ./turbo.json ./turbo.json
 COPY ./bun.lock ./bun.lock
 COPY ./package.json ./package.json
@@ -19,9 +12,6 @@ COPY ./apps/backend ./apps/backend
 RUN bun install
 RUN bun db:generate
 
-RUN chmod +x ./cmd/backend.entrypoint.sh
-
 EXPOSE 8000
 
-ENTRYPOINT ["./cmd/backend.entrypoint.sh"]
 CMD ["bun", "start:backend"]

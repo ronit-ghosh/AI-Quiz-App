@@ -1,1 +1,1 @@
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL as string || "https://api.quiz.ronitghosh.site"
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL as string;

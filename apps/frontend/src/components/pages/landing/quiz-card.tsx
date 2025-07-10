@@ -22,7 +22,7 @@ export default function QuizCard({ name, length, created, desc, id }: QuizCardPr
 
   async function fetchCategory() {
     const token = await getToken()
-    fetchCategories(currentCategoryPage, token!)
+    fetchCategories(currentCategoryPage, token!, BACKEND_URL)
   }
 
   async function deleteQuiz() {

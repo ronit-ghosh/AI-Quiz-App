@@ -7,6 +7,7 @@ import { useStatStore } from "@repo/store";
 import SingleStats from "./SingleStats";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
+import { BACKEND_URL } from "@/lib/env";
 
 export default function StatsPage() {
   const {
@@ -22,7 +23,7 @@ export default function StatsPage() {
   useEffect(() => {
     (async function fetchData() {
       const token = await getToken()
-      fetchStatsLen(token!)
+      fetchStatsLen(token!, BACKEND_URL)
     })()
   }, [getToken, fetchStatsLen])
 
@@ -30,7 +31,7 @@ export default function StatsPage() {
     if (statsLength === 0) return;
     (async function fetchData() {
       const token = await getToken()
-      fetchStats(page, token!)
+      fetchStats(page, token!, BACKEND_URL)
     })()
   }, [page, statsLength, getToken, fetchStats])
 
