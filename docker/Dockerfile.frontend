@@ -2,22 +2,20 @@ FROM oven/bun:1
 
 WORKDIR /app
 
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-ENV CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+ARG PUBLISHABLE_KEY
 
-COPY ./cmd ./cmd
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$PUBLISHABLE_KEY
+
 COPY ./turbo.json ./turbo.json
 COPY ./bun.lock ./bun.lock
 COPY ./package.json ./package.json
-
 COPY ./packages ./packages
 COPY ./apps/frontend ./apps/frontend
 
-RUN chmod +x ./cmd/frontend.entrypoint.sh
-
 RUN bun install
+RUN bun run build:frontend
 
 EXPOSE 3000
 
-ENTRYPOINT ["./cmd/frontend.entrypoint.sh"]
-CMD [ "bun", "start:frontend" ]
+CMD ["bun", "start:frontend"]
+# d build --build-arg PUBLISHABLE_KEY=<NEXT_PUBLIC> -t quiz_fe -f ./docker/Dockerfile.frontend .

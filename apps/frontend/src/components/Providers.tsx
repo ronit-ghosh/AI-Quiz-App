@@ -11,6 +11,7 @@ export default function Providers({ children }: {
         <ClerkProvider
             signInFallbackRedirectUrl="/"
             signUpFallbackRedirectUrl="/"
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
         >
             <ThemeProvider
                 attribute="class"
